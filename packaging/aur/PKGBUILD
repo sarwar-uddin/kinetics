@@ -1,6 +1,6 @@
 # Maintainer: Sarwar Uddin <91957745+sarwar-uddin@users.noreply.github.com>
 pkgname=kinetics
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc="Educational pharmacokinetics explorer: how a substance moves through the body"
 arch=('any')

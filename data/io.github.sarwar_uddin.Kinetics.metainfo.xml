@@ -47,19 +47,19 @@
   <screenshots>
     <screenshot type="default">
       <caption>The effect in the brain peaks after the blood level does</caption>
-      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.1/docs/screenshot.png</image>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.2/docs/screenshot.png</image>
     </screenshot>
     <screenshot>
       <caption>Two substances on one timeline, with the interaction explained</caption>
-      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.1/docs/combination.png</image>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.2/docs/combination.png</image>
     </screenshot>
     <screenshot>
       <caption>Seven daily doses, with the level climbing each day</caption>
-      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.1/docs/accumulation.png</image>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.2/docs/accumulation.png</image>
     </screenshot>
     <screenshot>
       <caption>A combination that forms a third, longer-lived drug</caption>
-      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.1/docs/cocaine-alcohol.png</image>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.2/docs/cocaine-alcohol.png</image>
     </screenshot>
   </screenshots>
 
@@ -99,6 +99,15 @@
   </content_rating>
 
   <releases>
+    <release version="0.2.2" date="2026-11-22">
+      <description>
+        <p>
+          Corrects the application ID, respects XDG_CONFIG_HOME when saving the
+          profile so it behaves correctly inside a sandbox, and adds Arch and
+          Flatpak packaging.
+        </p>
+      </description>
+    </release>
     <release version="0.2.0" date="2026-11-22">
       <description>
         <p>

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kinetics"
-version = "0.2.1"
+version = "0.2.2"
 description = "An educational pharmacokinetics explorer: how substances are absorbed, distributed, metabolised and eliminated"
 readme = "README.md"
 requires-python = ">=3.11"
