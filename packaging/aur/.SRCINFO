@@ -1,0 +1,21 @@
+pkgbase = kinetics
+	pkgdesc = Educational pharmacokinetics explorer: how a substance moves through the body
+	pkgver = 0.2.1
+	pkgrel = 1
+	url = https://github.com/sarwar-uddin/kinetics
+	arch = any
+	license = GPL-3.0-or-later
+	makedepends = python-build
+	makedepends = python-installer
+	makedepends = python-wheel
+	makedepends = python-setuptools
+	depends = python
+	depends = pyside6
+	depends = python-numpy
+	depends = python-scipy
+	depends = qt6-declarative
+	depends = kirigami
+	source = kinetics-0.2.1.tar.gz::https://github.com/sarwar-uddin/kinetics/archive/refs/tags/v0.2.1.tar.gz
+	sha256sums = 475a09fca9d20b35b6654012a1d8503ff4ccdc297b6a46358f452f55162b130c
+
+pkgname = kinetics
