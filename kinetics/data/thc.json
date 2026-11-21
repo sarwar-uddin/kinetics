@@ -1,0 +1,132 @@
+{
+  "id": "thc",
+  "name": "THC (cannabis)",
+  "formula": "C21H30O2",
+  "class": "CB1/CB2 partial agonist",
+  "category": "Cannabinoids",
+  "color": "#7fc47f",
+  "summary": "The best demonstration of why a drug test result tells you almost nothing about whether someone is impaired. THC is extremely fat-soluble, so it leaves the blood quickly — into tissue, not out of the body. It then seeps back for days or weeks. Blood levels crash within an hour while the body is still full of it.",
+  "mechanism": "Partial agonist at CB1 receptors, which sit on the presynaptic terminal and normally respond to endocannabinoids made on demand to dial back whatever synapse just fired. THC floods that system continuously instead of transiently, which is why it disrupts short-term memory formation and time perception.",
+  "two_compartment": {
+    "central_fraction": 0.09,
+    "note": "The peripheral compartment is body fat. It is roughly twenty times the size of the blood compartment, which is why the early fall is so steep and the tail so long."
+  },
+  "vd_per_kg": 7.0,
+  "vd_range": [
+    4.0,
+    10.0
+  ],
+  "cl_per_kg": 0.2,
+  "half_life": 30.0,
+  "half_life_range": [
+    20.0,
+    57.0
+  ],
+  "ke0_half_life": 0.25,
+  "routes": {
+    "smoked": {
+      "f": 0.25,
+      "tmax": 0.12,
+      "tlag": 0.0,
+      "note": "Peaks during the act of smoking and falls by about 90% within the first hour — almost entirely by distribution into tissue rather than elimination. Bioavailability is enormously variable (10-35%) because it depends on inhalation depth and how much is burned off."
+    },
+    "vaporised": {
+      "f": 0.3,
+      "tmax": 0.12,
+      "tlag": 0.0,
+      "note": "Similar kinetics to smoking with slightly higher delivery, since less is destroyed by combustion."
+    },
+    "oral": {
+      "f": 0.07,
+      "tmax": 2.0,
+      "tlag": 0.8,
+      "note": "Only a small fraction survives the first pass, and the lag is long and unpredictable — which is the single biggest cause of accidental overconsumption, because the obvious response to 'nothing is happening' at 90 minutes is to eat more. But the first pass is not just loss: it converts THC into 11-OH-THC, which crosses into the brain more readily and is more potent than THC itself. An edible is not a slower joint; it is a chemically different experience."
+    }
+  },
+  "default_route": "smoked",
+  "metabolism": {
+    "primary_enzyme": "CYP2C9 and CYP3A4",
+    "enzyme_share": 0.9,
+    "pathways": [
+      {
+        "name": "11-OH-THC",
+        "fraction": 0.2,
+        "active": true,
+        "note": "Active, and more potent than THC. After smoking it is a minor player; after an edible, first-pass metabolism makes it comparable to or greater than the parent drug, which is why oral cannabis is stronger and longer than the dose implies."
+      },
+      {
+        "name": "THC-COOH",
+        "fraction": 0.65,
+        "active": false,
+        "note": "Inactive, and the compound every drug test measures. It is stored in fat and released slowly, staying detectable for about a week after occasional use and up to a month or more in daily users — long after any impairment has passed."
+      },
+      {
+        "name": "Other hydroxy metabolites",
+        "fraction": 0.15,
+        "active": false,
+        "note": "Minor oxidative products."
+      }
+    ]
+  },
+  "presets": [
+    {
+      "label": "Joint, ~10 mg THC absorbed",
+      "mg": 10
+    },
+    {
+      "label": "Joint, shared, ~5 mg",
+      "mg": 5
+    },
+    {
+      "label": "Edible, 10 mg",
+      "mg": 10,
+      "route": "oral"
+    },
+    {
+      "label": "Edible, 25 mg",
+      "mg": 25,
+      "route": "oral"
+    }
+  ],
+  "default_dose": 10,
+  "display_unit": "µg/L",
+  "display_scale": 1000.0,
+  "effect_levels": [
+    {
+      "conc": 0.002,
+      "label": "2 µg/L — per se driving limit in several jurisdictions"
+    },
+    {
+      "conc": 0.005,
+      "label": "5 µg/L — per se limit elsewhere; impairment likely near the peak"
+    },
+    {
+      "conc": 0.02,
+      "label": "20 µg/L — typical range during smoking"
+    }
+  ],
+  "risk": [
+    "Edible timing is the main acute harm. Set the route to oral and look at the lag before the curve moves: redosing inside that window stacks doses that have not arrived yet.",
+    "Blood level and impairment do not line up. After smoking, levels fall far faster than performance recovers; per se blood limits are legal conventions, not measures of being affected.",
+    "The long terminal half-life means daily use accumulates. Someone who uses every day never returns to zero between uses, which is why tolerance builds and why withdrawal appears only after several days of stopping.",
+    "In those predisposed, high-potency cannabis is associated with psychosis risk; this is about potency and frequency, not the kinetics shown here."
+  ],
+  "sources": [
+    {
+      "text": "Huestis MA. Human cannabinoid pharmacokinetics. Chem Biodivers. 2007;4(8):1770-804.",
+      "for": "Vd, clearance, half-life, route bioavailability, metabolite shares"
+    },
+    {
+      "text": "Grotenhermen F. Pharmacokinetics and pharmacodynamics of cannabinoids. Clin Pharmacokinet. 2003;42(4):327-60.",
+      "for": "two-compartment behaviour, fat redistribution"
+    },
+    {
+      "text": "Lemberger L et al. Delta-9-THC: metabolism and disposition in long-term marihuana smokers. Science. 1971;173(3991):72-4.",
+      "for": "accumulation in regular users"
+    },
+    {
+      "text": "Newmeyer MN et al. Free and glucuronide whole blood cannabinoids after controlled smoked, vaporized, oral cannabis. Clin Chem. 2016;62(12):1579-92.",
+      "for": "route comparison, 11-OH-THC after oral dosing"
+    }
+  ]
+}

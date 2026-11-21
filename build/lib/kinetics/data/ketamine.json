@@ -1,0 +1,67 @@
+{
+  "id": "ketamine",
+  "name": "Ketamine",
+  "formula": "C13H16ClNO",
+  "class": "NMDA receptor antagonist",
+  "category": "Dissociatives",
+  "color": "#9fc4e8",
+  "summary": "A drug where the route changes not just the speed but the substance. Swallowed, over 80% of a ketamine dose is converted by the liver into norketamine before it ever reaches the brain — and norketamine is a different, longer, more sedating drug. Oral ketamine is substantially a norketamine experience.",
+  "mechanism": "Blocks the NMDA glutamate receptor channel from the inside, which it can only do when the channel is already open — so it preferentially silences the most active circuits. The dissociative effect comes from functionally disconnecting cortical regions rather than depressing them. Its rapid antidepressant effect is thought to involve a downstream burst of synaptic plasticity, not the block itself.",
+  "two_compartment": {"central_fraction": 0.2,
+                      "note": "Fat-soluble and rapidly redistributed, so a single dose wears off by moving into tissue well before it is eliminated."},
+  "vd_per_kg": 3.0,
+  "vd_range": [2.0, 4.0],
+  "cl_per_kg": 0.9,
+  "half_life": 2.75,
+  "half_life_range": [2.0, 4.0],
+  "ke0_half_life": 0.08,
+  "routes": {
+    "insufflated": {"f": 0.45, "tmax": 0.3, "tlag": 0.05,
+                    "note": "The common recreational route. Partly absorbed nasally and partly swallowed, so it produces both a ketamine peak and a delayed norketamine tail."},
+    "iv": {"f": 1.0, "tmax": 0.02, "tlag": 0.0,
+           "note": "Anaesthetic and clinical antidepressant route. Entirely parent drug, with no first-pass conversion at all."},
+    "im": {"f": 0.93, "tmax": 0.3, "tlag": 0.03,
+           "note": "Nearly complete absorption with a smooth rise; the usual route for veterinary and field anaesthesia."},
+    "oral": {"f": 0.17, "tmax": 1.0, "tlag": 0.3,
+             "note": "Only about a sixth survives the liver, and what emerges is mostly norketamine. The result is longer, heavier and less lucid than the same amount by any other route — not a weaker version of the same thing."}
+  },
+  "default_route": "insufflated",
+  "metabolism": {
+    "primary_enzyme": "CYP3A4 and CYP2B6",
+    "enzyme_share": 0.95,
+    "pathways": [
+      {"name": "Norketamine", "fraction": 0.8, "active": true,
+       "note": "Active, roughly a third as potent, and longer-lived than the parent at around 5 hours. After an oral dose it is the dominant species."},
+      {"name": "Dehydronorketamine", "fraction": 0.1, "active": false, "note": "Inactive."},
+      {"name": "Hydroxynorketamines", "fraction": 0.1, "active": true,
+       "note": "Of research interest for the antidepressant effect, which may not require NMDA blockade at all."}
+    ]
+  },
+  "presets": [
+    {"label": "Low, 30 mg", "mg": 30},
+    {"label": "Commonly reported, 60 mg", "mg": 60},
+    {"label": "Higher, 100 mg", "mg": 100},
+    {"label": "Clinical antidepressant, 0.5 mg/kg IV", "mg": 35, "route": "iv"}
+  ],
+  "default_dose": 60,
+  "display_unit": "µg/L",
+  "display_scale": 1000.0,
+  "effect_levels": [
+    {"conc": 0.05, "label": "50 µg/L — threshold, mild dissociation"},
+    {"conc": 0.15, "label": "150 µg/L — strong dissociation"},
+    {"conc": 0.5, "label": "500 µg/L — anaesthesia; airway reflexes reduced"},
+    {"conc": 2.0, "label": "2000 µg/L — surgical anaesthesia"}
+  ],
+  "risk": [
+    "Redosing is the main acute problem: the effect fades by redistribution in 20-45 minutes while most of the drug is still in the body, so repeated doses stack into a far deeper state than intended.",
+    "Loss of airway reflexes plus vomiting is the usual mechanism of harm; ketamine rarely stops breathing on its own, but someone unconscious on their back is in danger regardless of the drug.",
+    "Ketamine-induced uropathy is the distinctive chronic harm of heavy regular use — a painful, sometimes irreversible contracted bladder. It is dose and frequency related and is the reason frequent use is far riskier than occasional use.",
+    "With other depressants, particularly alcohol and benzodiazepines, the combined sedation and vomiting risk is much greater. See interactions."
+  ],
+  "sources": [
+    {"text": "Clements JA, Nimmo WS, Grant IS. Bioavailability, pharmacokinetics, and analgesic activity of ketamine in humans. J Pharm Sci. 1982;71(5):539-42.", "for": "route bioavailability, Vd, half-life"},
+    {"text": "Peltoniemi MA et al. Ketamine: a review of clinical pharmacokinetics and pharmacodynamics. Clin Pharmacokinet. 2016;55(9):1059-77.", "for": "clearance, compartment structure, norketamine"},
+    {"text": "Zanos P et al. Ketamine and ketamine metabolite pharmacology. Pharmacol Rev. 2018;70(3):621-60.", "for": "metabolite activity"},
+    {"text": "Winstock AR et al. The prevalence and natural history of urinary tract problems in ketamine users. Addiction. 2012;107(11):1976-8.", "for": "uropathy"}
+  ]
+}

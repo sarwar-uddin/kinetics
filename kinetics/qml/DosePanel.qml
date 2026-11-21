@@ -143,13 +143,41 @@ ColumnLayout {
         RowLayout {
             Layout.fillWidth: true
             QQC2.Button {
-                text: "Clear all"
+                text: "Clear"
                 icon.name: "edit-clear-all"
                 flat: true
                 font.pointSize: Kirigami.Theme.smallFont.pointSize
                 onClicked: panel.session.clearDoses()
             }
             Item { Layout.fillWidth: true }
+            QQC2.Label {
+                text: "repeat"
+                opacity: 0.6
+                font.pointSize: Kirigami.Theme.smallFont.pointSize
+            }
+            QQC2.ComboBox {
+                id: repeatEvery
+                Layout.preferredWidth: 74
+                model: ["4 h", "6 h", "8 h", "12 h", "24 h"]
+                currentIndex: 4
+                font.pointSize: Kirigami.Theme.smallFont.pointSize
+            }
+            QQC2.SpinBox {
+                id: repeatTimes
+                from: 1; to: 30
+                value: 6
+                Layout.preferredWidth: 90
+            }
+            QQC2.Button {
+                text: "Add"
+                font.pointSize: Kirigami.Theme.smallFont.pointSize
+                onClicked: panel.session.repeatDose(
+                    parseFloat(repeatEvery.currentText), repeatTimes.value,
+                    panel.session.doses.length ? panel.session.doses[0].amount : 0)
+                QQC2.ToolTip.text: "Repeat the first dose on a schedule — shows accumulation"
+                QQC2.ToolTip.visible: hovered
+                QQC2.ToolTip.delay: 400
+            }
         }
     }
 }

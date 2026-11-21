@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3f4b"/>
+      <stop offset="1" stop-color="#1b1e25"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e0455a" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#e0455a" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+  <rect x="3" y="3" width="58" height="58" rx="12" fill="url(#g)" stroke="#000" stroke-opacity="0.5"/>
+  <path d="M3 15a12 12 0 0 1 12-12h34a12 12 0 0 1 12 12v8H3z" fill="url(#gloss)"/>
+  <!-- axes -->
+  <path d="M12 50h40M12 50V16" stroke="#ffffff" stroke-opacity="0.3" stroke-width="1.6"
+        stroke-linecap="round" fill="none"/>
+  <!-- the concentration curve: fast rise, exponential decay -->
+  <path d="M12 50 C16 50 17 22 23 22 C31 22 36 44 52 48 L52 50 Z" fill="url(#fill)"/>
+  <path d="M12 50 C16 50 17 22 23 22 C31 22 36 44 52 48" fill="none"
+        stroke="#e0455a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="23" cy="22" r="3.2" fill="#ffffff" stroke="#e0455a" stroke-width="2"/>
+</svg>

@@ -1,0 +1,63 @@
+{
+  "id": "caffeine",
+  "name": "Caffeine",
+  "formula": "C8H10N4O2",
+  "class": "Methylxanthine stimulant",
+  "color": "#8c6239",
+  "summary": "The most used psychoactive substance on earth, and the one with the tidiest pharmacokinetics: it is absorbed almost completely, spreads through total body water, and is cleared by a single enzyme at a steady proportional rate.",
+  "mechanism": "Blocks adenosine A1 and A2A receptors. Adenosine builds up through the day and signals sleep pressure; caffeine occupies the receptors without activating them, so the signal goes unheard. The adenosine itself keeps accumulating, which is why the tiredness arrives all at once when the caffeine clears.",
+  "vd_per_kg": 0.6,
+  "vd_range": [0.5, 0.8],
+  "half_life": 5.0,
+  "half_life_range": [2.0, 10.0],
+  "routes": {
+    "oral": {"f": 0.99, "tmax": 0.75, "tlag": 0.0,
+             "note": "Essentially complete absorption with no measurable first-pass loss; the liver clears it slowly enough that nearly all of it survives the first trip through."}
+  },
+  "default_route": "oral",
+  "metabolism": {
+    "primary_enzyme": "CYP1A2",
+    "enzyme_share": 0.95,
+    "pathways": [
+      {"name": "Paraxanthine", "fraction": 0.84, "active": true,
+       "note": "The main metabolite, and itself a stimulant and adenosine blocker. A good share of what you feel in the later hours is paraxanthine, not caffeine."},
+      {"name": "Theobromine", "fraction": 0.12, "active": true,
+       "note": "The compound that makes up most of chocolate's mild lift. Weak stimulant, a vasodilator, half-life around 7 hours."},
+      {"name": "Theophylline", "fraction": 0.04, "active": true,
+       "note": "A bronchodilator still used as an asthma drug. The same molecule, just a different methyl group missing."}
+    ]
+  },
+  "presets": [
+    {"label": "Espresso (single)", "mg": 63},
+    {"label": "Filter coffee (240 mL)", "mg": 95},
+    {"label": "Instant coffee (240 mL)", "mg": 62},
+    {"label": "Black tea (240 mL)", "mg": 47},
+    {"label": "Green tea (240 mL)", "mg": 28},
+    {"label": "Cola (330 mL)", "mg": 34},
+    {"label": "Energy drink (250 mL)", "mg": 80},
+    {"label": "Caffeine tablet", "mg": 200}
+  ],
+  "default_dose": 95,
+  "effect_levels": [
+    {"conc": 1.0, "label": "Threshold — noticeable alertness"},
+    {"conc": 5.0, "label": "Typical effective range"},
+    {"conc": 15.0, "label": "Jitteriness, tachycardia for most people"},
+    {"conc": 80.0, "label": "Toxic range reported in the literature"}
+  ],
+  "factors": {
+    "smoker": {"cl_multiplier": 1.9,
+               "note": "Polycyclic aromatic hydrocarbons in smoke induce CYP1A2, roughly doubling caffeine clearance. This is why heavy smokers drink more coffee, and why quitting raises caffeine levels sharply on the same intake — a known cause of the jitters in the first week off cigarettes."},
+    "oral_contraceptives": {"cl_multiplier": 0.5,
+                            "note": "Ethinylestradiol inhibits CYP1A2; the half-life roughly doubles."},
+    "pregnancy_third_trimester": {"cl_multiplier": 0.33,
+                                  "note": "CYP1A2 activity falls steeply; the half-life can reach 15 hours or more."},
+    "liver_cirrhosis": {"cl_multiplier": 0.25,
+                        "note": "Clearance depends almost entirely on hepatic enzyme capacity, so it falls with it."}
+  },
+  "sources": [
+    {"text": "Blanchard J, Sawers SJ. The absolute bioavailability of caffeine in man. Eur J Clin Pharmacol. 1983;24(1):93-8.", "for": "bioavailability, Vd"},
+    {"text": "Arnaud MJ. Pharmacokinetics and metabolism of natural methylxanthines. Handb Exp Pharmacol. 2011;200:33-91.", "for": "metabolite shares, half-life range"},
+    {"text": "Nehlig A. Interindividual differences in caffeine metabolism. Pharmacol Rev. 2018;70(2):384-411.", "for": "CYP1A2 variability, factors"},
+    {"text": "USDA FoodData Central; Mitchell DC et al. Beverage caffeine intakes in the U.S. Food Chem Toxicol. 2014;63:136-42.", "for": "beverage caffeine amounts"}
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "id": "psilocybin",
+  "name": "Psilocybin",
+  "formula": "C12H17N2O4P",
+  "class": "5-HT2A agonist (prodrug)",
+  "category": "Psychedelics",
+  "color": "#b89fd9",
+  "summary": "Psilocybin is inactive. It is a phosphate ester that exists, as far as the mushroom is concerned, to be stable — and the moment it meets the phosphatases in your gut wall and liver it loses that phosphate and becomes psilocin, which is the actual drug. Everything you feel is psilocin; psilocybin is the packaging.",
+  "model_note": "The curve tracks psilocin, the active species. Dephosphorylation is fast relative to absorption, so the rise you see is dominated by how quickly the mushroom material is digested — which is why the onset varies so much with stomach contents and preparation.",
+  "mechanism": "Psilocin is a 5-HT2A agonist, structurally close to serotonin itself. The same receptor as LSD, but with much faster dissociation, which is why the experience is roughly half as long despite comparable intensity.",
+  "vd_per_kg": 4.5,
+  "vd_range": [3.0, 6.0],
+  "half_life": 2.5,
+  "half_life_range": [1.5, 3.5],
+  "ke0_half_life": 0.5,
+  "routes": {
+    "oral": {"f": 0.5, "tmax": 1.8, "tlag": 0.3,
+             "note": "Eaten as dried mushroom, where the drug has to be released from fungal tissue before anything can be absorbed — which is why onset ranges from 20 minutes to well over an hour and why an empty stomach makes it faster and sharper."},
+    "oral_tea": {"f": 0.55, "tmax": 1.0, "tlag": 0.15,
+                 "note": "Extracted into hot water first, so absorption begins immediately. Faster onset, often less nausea, same total exposure."}
+  },
+  "default_route": "oral",
+  "metabolism": {
+    "primary_enzyme": "Alkaline phosphatase, then UGT1A10 and MAO",
+    "enzyme_share": 0.9,
+    "pathways": [
+      {"name": "Psilocin glucuronide", "fraction": 0.75, "active": false,
+       "note": "The main route out. Inactive and renally excreted; this is what urine testing would look for, though psilocin is not on standard panels."},
+      {"name": "4-hydroxyindole-3-acetic acid", "fraction": 0.15, "active": false,
+       "note": "Via monoamine oxidase — the same enzyme that handles serotonin."},
+      {"name": "Unchanged renal", "fraction": 0.1, "active": false, "note": "Small fraction."}
+    ]
+  },
+  "presets": [
+    {"label": "1 g dried (~10 mg psilocybin)", "mg": 10},
+    {"label": "2 g dried (~20 mg)", "mg": 20},
+    {"label": "3.5 g dried (~35 mg)", "mg": 35},
+    {"label": "Clinical trial dose, 25 mg", "mg": 25}
+  ],
+  "default_dose": 20,
+  "display_unit": "µg/L",
+  "display_scale": 1000.0,
+  "effect_levels": [
+    {"conc": 0.004, "label": "4 µg/L — threshold"},
+    {"conc": 0.012, "label": "12 µg/L — full effect"},
+    {"conc": 0.025, "label": "25 µg/L — strong"}
+  ],
+  "risk": [
+    "Mushroom potency varies by several fold between species, specimens and even parts of the same mushroom, so a dose in grams is a much rougher measure than a dose in milligrams. The presets here assume roughly 1% psilocybin by dry weight, which is an average, not a guarantee.",
+    "Misidentification of wild mushrooms is the serious physical danger — some lethal species are superficially similar, and liver failure from amatoxins begins after a symptom-free day.",
+    "Like LSD, the physiological margin is wide and the real risks are psychological and situational. Pre-existing psychosis risk is the main contraindication.",
+    "Lithium is associated with seizures in combination. SSRIs blunt the effect, and MAOIs — including those in some ayahuasca preparations — substantially intensify and prolong it. See interactions."
+  ],
+  "sources": [
+    {"text": "Hasler F et al. Determination of psilocin and 4-hydroxyindole-3-acetic acid in plasma. Pharm Acta Helv. 1997;72(3):175-84.", "for": "psilocin half-life, Tmax"},
+    {"text": "Brown RT et al. Pharmacokinetics of escalating doses of oral psilocybin in healthy adults. Clin Pharmacokinet. 2017;56(12):1543-54.", "for": "Vd, bioavailability, dose-concentration relationship"},
+    {"text": "Dinis-Oliveira RJ. Metabolism of psilocybin and psilocin. Drug Metab Rev. 2017;49(1):84-91.", "for": "metabolic pathways"},
+    {"text": "Passie T et al. The pharmacology of psilocybin. Addict Biol. 2002;7(4):357-64.", "for": "mushroom content, dose equivalence"}
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "id": "lsd",
+  "name": "LSD",
+  "formula": "C20H25N3O",
+  "class": "5-HT2A partial agonist",
+  "category": "Psychedelics",
+  "color": "#d98fc4",
+  "summary": "The only substance here measured in micrograms, and the clearest demonstration that potency and duration are unrelated. A hundred micrograms — a thousandth of a typical paracetamol dose — produces twelve hours of effect, because LSD binds the receptor and then the receptor closes over it, trapping it in place. The effect outlasts the plasma level because getting the molecule back out is the slow step.",
+  "mechanism": "Partial agonist at 5-HT2A receptors on cortical pyramidal neurons. Crystal structures show the receptor's extracellular loop folding shut over the bound molecule like a lid, giving an unusually slow dissociation — the residence time at the receptor, not the concentration in blood, is what sets the duration.",
+  "vd_per_kg": 0.3,
+  "vd_range": [0.25, 0.4],
+  "half_life": 3.6,
+  "half_life_range": [2.6, 5.1],
+  "ke0_half_life": 0.9,
+  "nonlinear": {
+    "note": "Reported pharmacokinetics are approximately linear across common doses, but the relationship between plasma level and effect is not: subjective effects persist well after the plasma curve has fallen, because of slow dissociation from the receptor. The effect-site curve here approximates that lag, but real duration is longer than any blood-level model implies.",
+    "threshold_mg": 0.2
+  },
+  "routes": {
+    "oral": {"f": 0.71, "tmax": 1.5, "tlag": 0.3,
+             "note": "Absorbed through the gut, with effects beginning around 30-60 minutes and the peak at about 1.5-2.5 hours. The long plateau that follows is receptor binding, not continued absorption."},
+    "sublingual": {"f": 0.75, "tmax": 1.2, "tlag": 0.15,
+                   "note": "Partly absorbed through the mouth, which slightly shortens the onset; total exposure is essentially unchanged."}
+  },
+  "default_route": "oral",
+  "metabolism": {
+    "primary_enzyme": "CYP2D6 and other hepatic oxidation",
+    "enzyme_share": 0.9,
+    "pathways": [
+      {"name": "2-oxo-3-hydroxy-LSD", "fraction": 0.8, "active": false,
+       "note": "The main inactive metabolite, and what analytical testing looks for, since LSD itself is present in vanishingly small amounts."},
+      {"name": "Nor-LSD", "fraction": 0.1, "active": false, "note": "Minor."},
+      {"name": "Unchanged renal", "fraction": 0.1, "active": false, "note": "A small fraction, excreted untouched."}
+    ]
+  },
+  "presets": [
+    {"label": "Low, 50 µg", "mg": 0.05},
+    {"label": "Commonly reported, 100 µg", "mg": 0.1},
+    {"label": "Higher, 200 µg", "mg": 0.2}
+  ],
+  "default_dose": 0.1,
+  "display_unit": "µg/L",
+  "display_scale": 1000.0,
+  "effect_levels": [
+    {"conc": 0.0001, "label": "0.1 µg/L — threshold of noticeable effect"},
+    {"conc": 0.0005, "label": "0.5 µg/L — full effect"},
+    {"conc": 0.001, "label": "1 µg/L — strong"}
+  ],
+  "risk": [
+    "LSD has a very wide margin for physical toxicity — deaths from the drug alone are essentially unrecorded — so its risks are psychological and situational rather than kinetic. The curve here cannot show the ones that matter.",
+    "The duration is the practical hazard: twelve hours is long enough that a difficult experience cannot simply be waited out, and long enough to produce real danger through impaired judgement in an unsafe setting.",
+    "Doses are so small that blotters cannot be judged by appearance, and substitution with NBOMe compounds — which have a far narrower margin and have caused deaths — has been widespread. If it tastes bitter, it is not LSD.",
+    "It is contraindicated with lithium, where the combination is associated with seizures, and interacts significantly with SSRIs (blunting) and MAOIs. See interactions.",
+    "In people predisposed to psychosis, it can precipitate prolonged episodes."
+  ],
+  "sources": [
+    {"text": "Dolder PC et al. Pharmacokinetics and pharmacodynamics of LSD in healthy subjects. Clin Pharmacokinet. 2017;56(10):1219-30.", "for": "half-life, Vd, bioavailability, Tmax, effect lag"},
+    {"text": "Dolder PC et al. LSD acutely impairs fear recognition. Neuropsychopharmacology. 2016;41(11):2638-46.", "for": "concentration-effect relationship"},
+    {"text": "Wacker D et al. Crystal structure of an LSD-bound human serotonin receptor. Cell. 2017;168(3):377-89.", "for": "slow receptor dissociation and duration"},
+    {"text": "Passie T et al. The pharmacology of lysergic acid diethylamide: a review. CNS Neurosci Ther. 2008;14(4):295-314.", "for": "metabolism, safety profile"}
+  ]
+}

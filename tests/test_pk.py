@@ -176,7 +176,7 @@ class PublishedValues(unittest.TestCase):
     def test_paracetamol_napqi_fraction(self):
         sub = self.subs["paracetamol"]
         p = model.build_params(sub, self.person, "oral")
-        split = model.napqi_split(sub, self.person)
+        split = model.metabolite_split(sub, self.person)
         c = pk.simulate([pk.Dose(0.0, 1000.0)], p, hours=24, points=3000,
                         metabolite_split=split)
         napqi = c.metabolites["NAPQI (via CYP2E1)"][-1]
@@ -188,7 +188,7 @@ class PublishedValues(unittest.TestCase):
         drinker = model.Person(70, chronic_alcohol=True)
         p = model.build_params(sub, drinker, "oral")
         c = pk.simulate([pk.Dose(0.0, 1000.0)], p, hours=24, points=3000,
-                        metabolite_split=model.napqi_split(sub, drinker))
+                        metabolite_split=model.metabolite_split(sub, drinker))
         frac = c.metabolites["NAPQI (via CYP2E1)"][-1] / c.eliminated[-1]
         self.assertTrue(0.14 < frac < 0.18, f"{frac:.3f}")
 
@@ -209,3 +209,178 @@ class PublishedValues(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TwoCompartment(unittest.TestCase):
+    """THC, fentanyl, diazepam and ketamine redistribute into tissue, and a
+    one-compartment model would misreport both the early fall and the tail."""
+
+    def setUp(self):
+        self.subs = model.load_substances()
+        self.person = model.Person(70)
+
+    def test_derivation_round_trips(self):
+        for vss, cl, tt, cf in [(500, 14, 30, 0.09), (280, 55, 7, 0.12), (77, 1.8, 43, 0.25)]:
+            v1, v2, c, q = pk.two_compartment(vss, cl, tt, cf)
+            p = pk.Params(vd=v1, v2=v2, cl=c, q=q, ka=2.0, f=1.0)
+            self.assertAlmostEqual(p.half_life, tt, delta=tt * 0.01)
+            self.assertAlmostEqual(p.vss, vss, delta=vss * 0.01)
+            self.assertLess(p.dist_half_life, p.half_life)
+
+    def test_auc_is_dose_over_clearance(self):
+        """Mass balance through two compartments: AUC must still be F·D/CL."""
+        v1, v2, cl, q = pk.two_compartment(500, 14, 30, 0.09)
+        p = pk.Params(vd=v1, v2=v2, cl=cl, q=q, ka=3.0, f=0.25)
+        c = pk.simulate([pk.Dose(0.0, 10.0)], p, hours=600, points=14000)
+        self.assertAlmostEqual(c.auc(), 0.25 * 10 / cl, delta=0.25 * 10 / cl * 0.02)
+
+    def test_terminal_half_life_cannot_beat_the_limit(self):
+        """A terminal half-life shorter than ln2·Vss/CL is physically impossible;
+        the solver must clamp rather than return nonsense."""
+        v1, v2, cl, q = pk.two_compartment(500, 14, 5.0, 0.09)   # limit is ~24.8 h
+        p = pk.Params(vd=v1, v2=v2, cl=cl, q=q, ka=2.0, f=1.0)
+        self.assertGreater(p.half_life, 4.0)
+        self.assertFalse(math.isnan(p.half_life))
+
+    def test_thc_smoked_falls_steeply_then_slowly(self):
+        sub = self.subs["thc"]
+        p = model.build_params(sub, self.person, "smoked")
+        c = pk.simulate([pk.Dose(0.0, 10.0, "smoked")], p, hours=48, points=6000)
+        # published: peak tens of µg/L, ~90% gone within the first hour
+        self.assertTrue(20 < c.cmax * 1000 < 150, f"{c.cmax * 1000:.0f} µg/L")
+        self.assertLess(c.at(1.0), c.cmax * 0.45)
+        # but it is redistribution, not elimination: plenty is still in the body
+        at1h = float(np.interp(1.0, c.t, c.peripheral + c.conc * p.vd))
+        self.assertGreater(at1h, 10.0 * 0.25 * 0.5)
+
+    def test_fentanyl_duration_grows_with_repeated_doses(self):
+        """Context-sensitive half-time: the tissue fills, so later doses last longer."""
+        sub = self.subs["fentanyl"]
+        p = model.build_params(sub, self.person, "iv")
+        single = pk.simulate([pk.Dose(0.0, 0.1, "iv")], p, hours=24, points=6000)
+        repeated = pk.simulate([pk.Dose(i * 0.5, 0.1, "iv") for i in range(8)], p,
+                               hours=24, points=6000)
+        thresh = single.cmax * 0.2
+        t1 = single.crossing(thresh, after=single.tmax)
+        t2 = repeated.crossing(thresh, after=repeated.tmax)
+        self.assertGreater(t2 - 3.5, (t1 or 0) * 2)
+
+
+class EffectSite(unittest.TestCase):
+    def setUp(self):
+        self.subs = model.load_substances()
+        self.person = model.Person(70)
+
+    def test_effect_peaks_after_blood(self):
+        p = pk.Params(vd=50, cl=20, ka=6.0, f=1.0, ke0=math.log(2) / 0.3)
+        c = pk.simulate([pk.Dose(0.0, 100.0)], p, hours=12, points=4000)
+        self.assertGreater(c.effect_tmax, c.tmax + 0.1)
+        # In the terminal phase the two decay in parallel at a fixed ratio — they
+        # do not become equal, because the effect site is always running behind.
+        late = c.t > c.effect_tmax + 2
+        ratio = c.effect[late] / c.conc[late]
+        self.assertLess(ratio.max() - ratio.min(), 0.05)
+        self.assertGreater(ratio.mean(), 1.0)
+
+    def test_morphine_effect_lags_measurably(self):
+        """Morphine is water-soluble and slow into the brain — the gap is the point."""
+        sub = self.subs["morphine"]
+        p = model.build_params(sub, self.person, "iv")
+        c = pk.simulate([pk.Dose(0.0, 10.0, "iv")], p, hours=12, points=5000)
+        self.assertGreater(c.effect_tmax - c.tmax, 0.2)
+
+    def test_no_ke0_means_effect_equals_blood(self):
+        p = pk.Params(vd=50, cl=20, ka=3.0, f=1.0, ke0=0.0)
+        c = pk.simulate([pk.Dose(0.0, 100.0)], p, hours=12, points=2000)
+        self.assertTrue(np.allclose(c.effect, c.conc))
+
+
+class Interactions(unittest.TestCase):
+    def test_opioid_plus_sedative_is_flagged_danger(self):
+        hits = model.find_interactions(["heroin", "diazepam"])
+        self.assertTrue(hits)
+        self.assertEqual(hits[0]["severity"], "danger")
+
+    def test_tag_matching_covers_every_opioid_and_sedative(self):
+        for op in ("heroin", "morphine", "fentanyl", "methadone", "codeine"):
+            for sed in ("diazepam", "alprazolam", "ghb", "alcohol"):
+                hits = model.find_interactions([op, sed])
+                self.assertTrue(any(h["severity"] == "danger" for h in hits),
+                                f"{op} + {sed} not flagged")
+
+    def test_single_substance_has_no_interactions(self):
+        for sid in ("caffeine", "lsd", "thc"):
+            self.assertEqual(model.find_interactions([sid]), [])
+
+    def test_specific_pair_beats_generic_tag(self):
+        hits = model.find_interactions(["cocaine", "alcohol"])
+        self.assertIn("cocaethylene", hits[0]["title"] + hits[0]["text"])
+
+    def test_results_are_sorted_by_severity(self):
+        hits = model.find_interactions(["cocaine", "alcohol", "heroin"])
+        ranks = [model.SEVERITY_RANK[h["severity"]] for h in hits]
+        self.assertEqual(ranks, sorted(ranks))
+
+
+class Library(unittest.TestCase):
+    """Every substance must survive the model and carry its sources."""
+
+    def setUp(self):
+        self.subs = model.load_substances()
+        self.person = model.Person(70)
+
+    def test_every_substance_simulates_on_every_route(self):
+        for sid, sub in self.subs.items():
+            for route in sub.route_names:
+                p = model.build_params(sub, self.person, route)
+                c = pk.simulate([pk.Dose(0.0, sub.raw["default_dose"], route)], p,
+                                hours=48, points=1500,
+                                metabolite_split=model.metabolite_split(sub, self.person))
+                self.assertTrue(np.all(np.isfinite(c.conc)), f"{sid}/{route}")
+                self.assertGreater(c.cmax, 0, f"{sid}/{route}")
+                self.assertTrue(np.all(c.conc >= -1e-9), f"{sid}/{route} negative")
+
+    def test_tmax_matches_the_literature_value(self):
+        for sid, sub in self.subs.items():
+            if sub.raw.get("saturable"):
+                continue    # tmax is an outcome of dose, not an input
+            for route in sub.route_names:
+                r = sub.route(route)
+                if route == "iv":
+                    continue
+                want = r["tmax"] + r.get("tlag", 0)
+                p = model.build_params(sub, self.person, route)
+                c = pk.simulate([pk.Dose(0.0, sub.raw["default_dose"], route)], p,
+                                hours=max(48, want * 8), points=6000)
+                self.assertAlmostEqual(c.tmax, want, delta=max(0.08, want * 0.15),
+                                       msg=f"{sid}/{route}")
+
+    def test_every_substance_is_tagged_and_categorised(self):
+        tags = model.load_tags()
+        for sid, sub in self.subs.items():
+            self.assertIn(sid, tags, f"{sid} has no tags entry")
+            self.assertIn(sub.category, model.CATEGORY_ORDER, sid)
+
+    def test_every_substance_has_sources_and_risk(self):
+        for sid, sub in self.subs.items():
+            self.assertGreaterEqual(len(sub.raw["sources"]), 3, sid)
+            for s in sub.raw["sources"]:
+                self.assertTrue(s.get("for") and s.get("text"), sid)
+            if sub.category != "Everyday":
+                self.assertTrue(sub.raw.get("risk"), f"{sid} has no risk notes")
+
+    def test_pathway_fractions_sum_to_one(self):
+        for sid, sub in self.subs.items():
+            if sid in ("alcohol",):
+                continue   # sequential, not parallel
+            total = sum(q["fraction"] for q in sub.raw["metabolism"]["pathways"])
+            self.assertAlmostEqual(total, 1.0, delta=0.02, msg=sid)
+
+    def test_display_scale_keeps_numbers_readable(self):
+        """A peak should land in a human range once scaled, not 0.0000 or 100000."""
+        for sid, sub in self.subs.items():
+            p = model.build_params(sub, self.person, sub.default_route)
+            c = pk.simulate([pk.Dose(0.0, sub.raw["default_dose"], sub.default_route)],
+                            p, hours=48, points=2000)
+            shown = c.cmax * sub.scale
+            self.assertTrue(0.01 < shown < 10000, f"{sid}: {shown:g} {sub.unit}")

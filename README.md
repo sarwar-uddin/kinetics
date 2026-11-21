@@ -1,97 +1,146 @@
 # Kinetics
 
 An app for a question most people never get answered: when you take something,
-what actually happens to it? How much of it reaches your blood, how fast, where
-it goes, what it turns into, and how long it really takes to leave.
+what actually happens to it? How much reaches your blood, how fast, where it
+goes, what it turns into, and how long it really takes to leave.
 
 ![Kinetics](docs/screenshot.png)
 
-You pick a substance, a route and a dose, stack as many intakes as you like on a
-timeline, and it plots the concentration in your blood over time, with the
-absorption, peak and elimination phases explained as you move the cursor across
-them.
+Pick a substance, a route and a dose, stack as many intakes on the timeline as
+you like, and it plots the concentration in your blood over time — with the
+absorption, distribution, peak and elimination phases explained as you move the
+cursor across them. A figure beside it shows where the substance is right now:
+still in the gut, in the blood, out in tissue, through the liver, gone.
 
-**It is a teaching model, not a clinical tool.** It uses compartmental
-pharmacokinetics with population-average parameters from published literature.
-It shows you the *shape* of what happens. It cannot tell you what will happen to
-any particular person, and it is not a dosing calculator.
+**This is a teaching and harm-reduction tool, not a clinical or dosing
+calculator.** It uses compartmental pharmacokinetics with population-average
+parameters from published literature. It shows the *shape* of what happens. It
+cannot tell you what will happen to any particular person, and tolerance —
+which changes real-world risk more than any number here — is not modelled at
+all.
 
-## The four substances, and why these four
+## Twenty substances, each teaching something different
 
-Each one is here to demonstrate a different principle.
+| | |
+|---|---|
+| **Everyday** | caffeine, nicotine, alcohol, paracetamol |
+| **Stimulants** | cocaine, amphetamine, MDMA |
+| **Opioids** | heroin, morphine, codeine, methadone, fentanyl |
+| **Depressants** | diazepam, alprazolam, GHB |
+| **Dissociatives** | ketamine |
+| **Psychedelics** | LSD, psilocybin |
+| **Cannabinoids** | THC |
+| **Psychiatric** | fluoxetine |
 
-**Caffeine — the textbook case.** Near-complete absorption, a single enzyme, a
-clean half-life. The baseline everything else is a departure from. Stack a day
-of coffees and watch why the 4 pm espresso is still at a third of its peak at
-midnight.
+They were not chosen for a list. Each one is the clearest example of a
+principle:
 
-**Nicotine — the route matters more than the dose.** The same 1.2 mg peaks ten
-times higher smoked than from a patch. Hit "Compare routes" to see all five on
-one plot. This is the pharmacological reason a patch treats dependence and a
-cigarette feeds it: the reward system reads the *speed* of the rise, not the
-amount. The patch also demonstrates **flip-flop kinetics** — it releases nicotine
-more slowly than the body clears it, so the tail of the curve reports the release
-rate, not the elimination rate.
+- **Caffeine** — the textbook case. One enzyme, a clean half-life, the baseline
+  everything else departs from.
+- **Alcohol and GHB** — *saturable elimination*. The enzyme runs flat out, so
+  the level falls in a straight line and there is no half-life at all. Double
+  the dose and you more than double the time. GHB shows why that is dangerous:
+  the gap between the effect people want and unconsciousness is about a factor
+  of two in dose.
+- **Nicotine and fentanyl patches** — *flip-flop kinetics*. The formulation
+  releases more slowly than the body clears, so the tail of the curve reports
+  the release rate, not elimination. The level stays up because it is still
+  arriving.
+- **THC, fentanyl, diazepam, ketamine** — *two compartments*. The early crash
+  is redistribution into tissue, not removal. For fentanyl this produces
+  context-sensitive half-time: add repeated doses and watch each one take
+  longer to fall than the last. For THC it is why a blood test says nothing
+  about impairment.
+- **Morphine** — the *effect site*. Morphine is water-soluble and crosses into
+  the brain slowly, so the effect peaks 15–30 minutes after the blood level
+  does. That gap is where accidental double-dosing happens, and the dashed
+  curve shows it.
+- **Heroin and psilocybin** — *prodrugs*. Neither does anything itself. Heroin
+  is a delivery mechanism for morphine; psilocybin is a phosphate ester of
+  psilocin.
+- **Codeine** — *pharmacogenetics*. It only works if CYP2D6 converts it to
+  morphine, and that varies enormously between people. Set the metabolizer type
+  in "Who's taking it" and watch the active fraction change.
+- **MDMA** — *nonlinearity*. It inhibits the enzyme that clears it, so exposure
+  rises faster than dose. The model is linear and says so: it understates.
+- **Methadone** — the one that kills people who are following instructions.
+  ![Accumulation](docs/accumulation.png)
+  Seven daily doses. The effect lasts about six hours, the drug about thirty,
+  and the trough climbs every day for a week.
+- **Fluoxetine** — the slowest thing here. Its active metabolite takes one to
+  two weeks; steady state arrives a month after starting.
 
-**Alcohol — the exception that defines the rule.** Everything else leaves at a
-rate proportional to how much is there, which is what a half-life *is*. Alcohol
-saturates its enzyme almost immediately and then leaves at a near-constant amount
-per hour. Doubling the dose doubles the time. Nothing speeds it up. The straight
-decline in the plot is the whole point:
+## Combinations
 
-![Alcohol](docs/alcohol.png)
+Most serious harm comes from combinations, and combinations only become visible
+when two curves share a clock. Hover any substance in the list and press **+**
+to add it alongside.
 
-**Paracetamol — a safety margin that is about a pathway, not a dose.** About 8%
-goes down a route that produces NAPQI, which is reactive and is neutralised by
-glutathione. Glutathione is finite. The metabolite bar under the body diagram
-shows the split, and turning on "regular heavy drinking" roughly doubles the
-NAPQI share — the best-documented interaction in the set.
+![Combination](docs/combination.png)
 
-## What's in it
-
-- **Concentration curve** with dose markers, labelled effect levels, and a cursor
-  that explains the phase you're in at that moment.
-- **Body diagram** showing where the substance is right now: gut, bloodstream,
-  eliminated, with particles that flow faster when absorption is faster, the
-  first-pass loss labelled, and the metabolites it has formed so far.
-- **Personal factors** — weight, body-water fraction, smoking, regular drinking,
-  oral contraceptives, CYP2A6 metabolizer type. Each is a documented multiplier
-  with its reasoning shown, saved to `~/.config/kinetics/person.json`.
-- **Sources** for every number, per substance, reachable from the toolbar.
+When a pairing is documented as dangerous the overlap is drawn and the
+mechanism explained — opioid with sedative, alcohol with almost anything, GHB
+with alcohol, cocaine with alcohol forming cocaethylene, SSRIs blocking the
+activation of codeine. Severity is colour-coded, and each warning says what the
+actual failure mode is rather than just "avoid".
 
 ## Accuracy
 
-The model is one-compartment with first-order absorption, or Michaelis-Menten
-elimination for alcohol. The test suite checks it against the analytic Bateman
-solution, conservation of mass, and published values:
+The engine is in `kinetics/pk.py` and is self-contained: one- or
+two-compartment models with first-order or Michaelis–Menten elimination, an
+optional effect-site compartment, solved with `scipy.integrate.solve_ivp`.
+38 tests check it against closed-form solutions and published values:
 
 | Check | Result |
 |---|---|
-| Solver vs. Bateman closed form | within 0.01% |
+| Solver vs. the Bateman closed form | within 0.01% |
 | Mass conservation | exact to 1e-3 mg |
+| AUC equals F·D/CL through two compartments | within 2% |
+| Two-compartment half-lives round-trip | within 1% |
 | Alcohol elimination rate | 0.15–0.20 g/L/h (published range) |
 | Alcohol peak vs. Widmark back-extrapolation | within 5% |
-| Published Tmax and half-lives round-trip | within 12% |
-| Caffeine peak, one 95 mg coffee | 1.5–2.5 mg/L |
+| Published Tmax, every substance, every route | within 15% |
 | Paracetamol NAPQI fraction | 8% ± 1% |
+| Every dangerous opioid/sedative pair flagged | 20/20 |
 
 ```
 python3 -m unittest -v tests.test_pk
 ```
 
-## Use
+Two things the test suite caught, which became features rather than fixes:
+
+1. The solver refused to let absorption be slower than elimination — which is
+   exactly what a patch does. That is flip-flop kinetics, and without it every
+   slow-release formulation was drawn wrong.
+2. The alcohol peak did not match Widmark's formula. The model was right:
+   Widmark is a back-extrapolation to t=0, and the real peak is lower because
+   elimination runs during absorption. It agrees to 1% once extrapolated
+   properly.
+
+## Install
 
 ```
-./install.sh        # ~/.local/bin/kinetics + menu entry, no root
+./install.sh            # ~/.local/bin + menu entry + icon + AppStream metadata
+./install.sh --pipx     # or into an isolated venv via pipx
 kinetics
 ```
 
-Click a substance on the left, add intakes with the preset buttons (set the hour
-first), and drag across the plot to move the cursor. The window buttons go from
-6 hours to a week.
+Needs Python 3.11+, PySide6, numpy and scipy. The desktop entry, icon and
+AppStream metainfo install to the usual XDG paths, so it appears in the
+application menu under Education and in Discover.
 
 ## Adding a substance
 
-Drop a JSON file in `kinetics/data/` following the shape of the existing four and
-add its id to `SUBSTANCE_ORDER` in `kinetics/model.py`. Every value needs an entry
-in `sources` saying what it was used for; a test enforces that.
+Drop a JSON file in `kinetics/data/` following the shape of the existing
+twenty, add its id to `SUBSTANCE_ORDER` in `kinetics/model.py`, and give it an
+entry in `data/tags.json` so the interaction rules can match it. Every value
+needs a citation in `sources` saying what it was used for — a test enforces
+that, and another enforces that non-everyday substances carry risk notes.
+
+Interaction rules live in `data/interactions.json` and match either a substance
+id or a pharmacological tag, so `tag:opioid` + `tag:sedative` covers twenty
+pairs with one rule.
+
+## Licence
+
+GPL-3.0-or-later.

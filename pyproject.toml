@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kinetics"
+version = "0.2.0"
+description = "An educational pharmacokinetics explorer: how substances are absorbed, distributed, metabolised and eliminated"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [{ name = "Sarwar Uddin" }]
+keywords = ["pharmacokinetics", "pharmacology", "harm-reduction", "education", "kde"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: X11 Applications :: Qt",
+    "Intended Audience :: Education",
+    "Intended Audience :: Healthcare Industry",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "PySide6>=6.6",
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
+
+[project.urls]
+Homepage = "https://github.com/sarwar-uddin/kinetics"
+Source = "https://github.com/sarwar-uddin/kinetics"
+
+[project.scripts]
+kinetics = "kinetics.__main__:main"
+
+[tool.setuptools]
+packages = ["kinetics"]
+
+[tool.setuptools.package-data]
+kinetics = ["data/*.json", "qml/*.qml"]

@@ -1,0 +1,145 @@
+{
+  "id": "alcohol",
+  "name": "Alcohol (ethanol)",
+  "formula": "C2H6O",
+  "class": "GABA-A positive modulator / NMDA antagonist",
+  "color": "#c9a227",
+  "summary": "The exception that teaches the rule. Every other substance here leaves at a rate proportional to how much is present, so it has a half-life. Alcohol saturates its own enzyme almost immediately and then leaves at a near-constant amount per hour, no matter how much you drank. Doubling the dose doubles the time, and nothing speeds it up.",
+  "mechanism": "Enhances GABA-A inhibition and blocks NMDA glutamate receptors, which together suppress cortical activity from the top down: judgement and inhibition first, then coordination, then memory formation, then the brainstem reflexes that keep you breathing.",
+  "vd_per_kg": 0.68,
+  "vd_range": [
+    0.55,
+    0.72
+  ],
+  "vd_note": "Alcohol distributes into total body water, so the volume is body water, not whole body mass. Widmark's r: about 0.68 L/kg for men and 0.55 for women, mostly because of differing body-fat fraction. Fat holds almost no water, so for the same weight and dose, more body fat means a higher peak.",
+  "saturable": true,
+  "vmax": 220.0,
+  "km": 82.0,
+  "elimination_note": "Michaelis-Menten with Vmax about 0.22 g/L/h and Km about 0.082 g/L. Because a typical BAC is ten times Km, the enzyme runs essentially flat out and the curve comes down in a straight line of roughly 0.15 to 0.20 g/L per hour (0.015-0.020 %BAC/h). Coffee, cold showers and exercise do not change Vmax.",
+  "routes": {
+    "oral": {
+      "f": 0.92,
+      "tmax": 0.75,
+      "tlag": 0.1,
+      "note": "Absorbed from the stomach and especially the small intestine, with an absorption half-life of about 10 minutes on an empty stomach. Some is destroyed before it reaches the blood by gastric alcohol dehydrogenase — first-pass metabolism which is lower in women and lower again on an empty stomach. Note that the time to peak is not a fixed property here: because elimination is saturated from the start, a larger dose peaks later as well as higher.",
+      "absorption_half_life": 0.17
+    },
+    "oral_with_food": {
+      "f": 0.85,
+      "tmax": 2.0,
+      "tlag": 0.3,
+      "note": "Food slows gastric emptying, which delays and blunts the peak substantially, and raises first-pass loss. The same drinks with a meal can give a peak a third lower.",
+      "absorption_half_life": 0.62
+    }
+  },
+  "default_route": "oral",
+  "metabolism": {
+    "primary_enzyme": "ADH (alcohol dehydrogenase)",
+    "enzyme_share": 0.9,
+    "pathways": [
+      {
+        "name": "Acetaldehyde",
+        "fraction": 1.0,
+        "active": true,
+        "note": "Toxic, reactive, and the immediate cause of flushing, nausea and much of the hangover. Normally destroyed within seconds by ALDH2. About 30-50% of people of East Asian descent carry an ALDH2 variant that works poorly, so acetaldehyde accumulates and causes the flush reaction — the same mechanism disulfiram induces deliberately."
+      },
+      {
+        "name": "Acetate",
+        "fraction": 1.0,
+        "active": false,
+        "note": "Harmless; enters normal metabolism and is burned as fuel, which is where alcohol's calories come from."
+      }
+    ],
+    "secondary": "CYP2E1 handles a growing share at high or chronic intake, and it is induced by regular drinking. That induction is what links heavy drinking to paracetamol liver injury."
+  },
+  "presets": [
+    {
+      "label": "Standard drink (UK/EU, 10 g)",
+      "mg": 10000
+    },
+    {
+      "label": "Standard drink (US, 14 g)",
+      "mg": 14000
+    },
+    {
+      "label": "Beer, 330 mL at 5%",
+      "mg": 13000
+    },
+    {
+      "label": "Beer, 500 mL at 5%",
+      "mg": 19700
+    },
+    {
+      "label": "Wine, 150 mL at 12%",
+      "mg": 14200
+    },
+    {
+      "label": "Spirits, 30 mL at 40%",
+      "mg": 9500
+    },
+    {
+      "label": "Spirits, double 60 mL at 40%",
+      "mg": 19000
+    }
+  ],
+  "default_dose": 14000,
+  "display_unit": "g/L",
+  "display_scale": 0.001,
+  "effect_levels": [
+    {
+      "conc": 200.0,
+      "label": "0.02% — mild relaxation, slight mood lift"
+    },
+    {
+      "conc": 500.0,
+      "label": "0.05% — judgement and inhibition measurably impaired"
+    },
+    {
+      "conc": 800.0,
+      "label": "0.08% — the legal driving limit in much of the world"
+    },
+    {
+      "conc": 1500.0,
+      "label": "0.15% — clear intoxication, impaired balance and speech"
+    },
+    {
+      "conc": 2500.0,
+      "label": "0.25% — blackout risk; memory formation fails"
+    },
+    {
+      "conc": 3500.0,
+      "label": "0.35% — the range where respiratory depression becomes a real danger"
+    }
+  ],
+  "factors": {
+    "female": {
+      "vd_per_kg": 0.55,
+      "note": "Lower body-water fraction and less gastric ADH, so the same drinks give a noticeably higher peak at the same body weight."
+    },
+    "chronic_heavy": {
+      "vmax_multiplier": 1.4,
+      "note": "CYP2E1 induction raises the elimination rate in regular heavy drinkers, up to about 0.03 %BAC/h. This is metabolic tolerance, and it is separate from the functional tolerance of the brain."
+    },
+    "fed": {
+      "note": "Handled by choosing the 'with food' route."
+    }
+  },
+  "sources": [
+    {
+      "text": "Holford NH. Clinical pharmacokinetics of ethanol. Clin Pharmacokinet. 1987;13(5):273-92.",
+      "for": "Michaelis-Menten parameters Vmax and Km"
+    },
+    {
+      "text": "Norberg A, Jones AW, Hahn RG, Gabrielsson JL. Role of variability in explaining ethanol pharmacokinetics. Clin Pharmacokinet. 2003;42(1):1-31.",
+      "for": "Vd, elimination rate range, food and sex effects"
+    },
+    {
+      "text": "Jones AW. Pharmacokinetics of ethanol — issues of forensic importance. Forensic Sci Rev. 2011;23(2):91-136.",
+      "for": "elimination rate in chronic drinkers, first-pass metabolism"
+    },
+    {
+      "text": "Edenberg HJ. The genetics of alcohol metabolism: ADH and ALDH variants. Alcohol Res Health. 2007;30(1):5-13.",
+      "for": "ALDH2 variant and the flush reaction"
+    }
+  ]
+}

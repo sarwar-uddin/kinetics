@@ -50,6 +50,7 @@ Rectangle {
         ColumnLayout {
             id: body
             Layout.fillWidth: true
+            Layout.preferredWidth: 1   // let fillWidth, not the text, set the width
             spacing: Kirigami.Units.smallSpacing
         }
     }

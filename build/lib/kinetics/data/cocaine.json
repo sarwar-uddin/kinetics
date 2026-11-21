@@ -1,0 +1,63 @@
+{
+  "id": "cocaine",
+  "name": "Cocaine",
+  "formula": "C17H21NO4",
+  "class": "Monoamine reuptake inhibitor",
+  "category": "Stimulants",
+  "color": "#d4d4dc",
+  "summary": "A drug whose entire risk profile follows from one number: it is gone from the blood in about an hour. Everything difficult about cocaine — the compulsive redosing, the gap between how long it is detectable and how long it works, the way the comedown arrives while the night is still going — is downstream of that half-life.",
+  "mechanism": "Blocks the dopamine, noradrenaline and serotonin transporters, so released neurotransmitter stays in the synapse instead of being recycled. It is also a sodium-channel blocker, which is why it was used as a local anaesthetic and why it is cardiotoxic: the same action that numbs a cornea destabilises cardiac conduction.",
+  "vd_per_kg": 2.0,
+  "vd_range": [1.6, 2.7],
+  "half_life": 1.0,
+  "half_life_range": [0.7, 1.5],
+  "ke0_half_life": 0.05,
+  "routes": {
+    "insufflated": {"f": 0.7, "tmax": 0.6, "tlag": 0.05,
+                    "note": "Absorbed through the nasal mucosa, but cocaine is a vasoconstrictor, so it throttles its own absorption — the blood supply it needs to cross closes down. That is why the nasal peak is lower and later than the amount would suggest, and why absorption continues for well over an hour."},
+    "smoked": {"f": 0.7, "tmax": 0.08, "tlag": 0.0,
+               "note": "Freebase vaporises and crosses the lung in seconds, reaching the brain faster than an injection. The curve is a spike: very high, very brief. That shape, not the molecule, is what makes smoked cocaine the most compulsive form."},
+    "iv": {"f": 1.0, "tmax": 0.03, "tlag": 0.0,
+           "note": "Complete and immediate."},
+    "oral": {"f": 0.3, "tmax": 1.0, "tlag": 0.3,
+             "note": "Largely destroyed by gut and liver esterases before it reaches the circulation, and slow enough that the characteristic rush does not happen."}
+  },
+  "default_route": "insufflated",
+  "metabolism": {
+    "primary_enzyme": "Plasma and liver esterases (pseudocholinesterase)",
+    "enzyme_share": 0.9,
+    "pathways": [
+      {"name": "Benzoylecgonine", "fraction": 0.45, "active": false,
+       "note": "Inactive, but with a half-life of about 6 hours it hangs around far longer than the drug does, and is what urine tests actually look for. It stays detectable for 2-4 days after a single use, and well over a week with heavy use — long after any effect has gone. Detection and impairment are completely different timescales."},
+      {"name": "Ecgonine methyl ester", "fraction": 0.4, "active": false,
+       "note": "The other major inactive product, formed by plasma esterases."},
+      {"name": "Norcocaine", "fraction": 0.05, "active": true,
+       "note": "A minor CYP3A4 product that is active and hepatotoxic."},
+      {"name": "Unchanged / other", "fraction": 0.1, "active": false, "note": "Renal."}
+    ]
+  },
+  "presets": [
+    {"label": "Line, ~30 mg", "mg": 30},
+    {"label": "Line, ~50 mg", "mg": 50},
+    {"label": "Smoked, ~50 mg", "mg": 50, "route": "smoked"},
+    {"label": "Smoked, ~100 mg", "mg": 100, "route": "smoked"}
+  ],
+  "default_dose": 50,
+  "effect_levels": [
+    {"conc": 0.05, "label": "Threshold of subjective effect"},
+    {"conc": 0.15, "label": "Typical range after a nasal dose"},
+    {"conc": 0.5, "label": "Levels at which cardiovascular strain is marked"},
+    {"conc": 1.0, "label": "Range associated with acute toxicity in case reports"}
+  ],
+  "risk": [
+    "The half-life is about an hour, but the dopamine rebound lasts much longer. The urge to redose arrives while most of the previous dose is still present, so levels stack faster than they feel like they are stacking.",
+    "Cardiac risk is not dose-linear. Coronary vasospasm, arrhythmia and raised clot risk can occur at ordinary doses, and the risk window extends past the subjective effect. Chest pain after cocaine is a genuine emergency, not anxiety.",
+    "Mixed with alcohol it forms cocaethylene (see interactions), which is longer-lived and harder on the heart than either alone."
+  ],
+  "sources": [
+    {"text": "Jufer RA et al. Elimination of cocaine and metabolites in plasma, saliva, and urine. J Anal Toxicol. 2000;24(7):467-77.", "for": "half-life, benzoylecgonine persistence"},
+    {"text": "Jeffcoat AR et al. Cocaine disposition in humans after intravenous, intranasal, freebase smoking. Drug Metab Dispos. 1989;17(2):153-9.", "for": "route bioavailability and Tmax"},
+    {"text": "Warner EA. Cocaine abuse. Ann Intern Med. 1993;119(3):226-35.", "for": "Vd, metabolic pathways"},
+    {"text": "Farré M et al. Alcohol and cocaine interactions in humans. J Pharmacol Exp Ther. 1993;266(3):1364-73.", "for": "cocaethylene formation"}
+  ]
+}

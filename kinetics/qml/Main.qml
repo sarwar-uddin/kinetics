@@ -7,18 +7,16 @@ Kirigami.ApplicationWindow {
     id: win
     required property var session
     title: "Kinetics"
-    width: 1600
-    height: 960
-    minimumWidth: 1050
-    minimumHeight: 700
+    width: 1680
+    height: 1000
+    minimumWidth: 1120
+    minimumHeight: 720
 
     readonly property color accent: session.info.color
     property bool compareMode: false
     property var compareData: null
 
-    function refreshCompare() {
-        compareData = compareMode ? session.compareRoutes() : null
-    }
+    function refreshCompare() { compareData = compareMode ? session.compareRoutes() : null }
     onCompareModeChanged: refreshCompare()
     Connections {
         target: win.session
@@ -26,10 +24,16 @@ Kirigami.ApplicationWindow {
         function onPersonChanged() { win.refreshCompare() }
     }
 
+    function severityColor(s) {
+        return s === "danger" ? "#e0455a" : s === "caution" ? "#d9a441" : "#6fb3d9"
+    }
+
     pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.ToolBar
     pageStack.initialPage: Kirigami.Page {
         padding: 0
-        title: win.session.info.name
+        title: win.session.mixed
+               ? win.session.tracks.map(t => t.name).join(" + ")
+               : win.session.info.name
 
         actions: [
             Kirigami.Action {
@@ -37,8 +41,15 @@ Kirigami.ApplicationWindow {
                 text: "Compare routes"
                 checkable: true
                 checked: win.compareMode
-                visible: win.session.info.routes.length > 1
+                enabled: win.session.info.routes.length > 1 && !win.session.mixed
                 onTriggered: win.compareMode = !win.compareMode
+            },
+            Kirigami.Action {
+                icon.name: "view-visible"
+                text: "Effect site"
+                checkable: true
+                checked: win.session.showEffect
+                onTriggered: win.session.setShowEffect(!win.session.showEffect)
             },
             Kirigami.Action {
                 icon.name: "user-identity"
@@ -56,55 +67,29 @@ Kirigami.ApplicationWindow {
             anchors.fill: parent
             spacing: 0
 
-            // ---------------- left: substance picker + doses ----------------
+            // ---------------- left: substances + intake ----------------
             QQC2.ScrollView {
                 id: leftScroll
                 Layout.preferredWidth: Kirigami.Units.gridUnit * 19
                 Layout.minimumWidth: Kirigami.Units.gridUnit * 19
                 Layout.maximumWidth: Kirigami.Units.gridUnit * 19
                 Layout.fillHeight: true
-                contentWidth: availableWidth
+                contentWidth: width - 18
                 QQC2.ScrollBar.horizontal.policy: QQC2.ScrollBar.AlwaysOff
 
                 ColumnLayout {
-                    width: leftScroll.availableWidth
+                    width: leftScroll.width - 18
                     spacing: Kirigami.Units.smallSpacing
 
-                    Item { implicitHeight: Kirigami.Units.smallSpacing }
-
-                    Repeater {
-                        model: win.session.substances
-                        delegate: QQC2.ItemDelegate {
-                            required property var modelData
-                            Layout.fillWidth: true
-                            Layout.leftMargin: Kirigami.Units.smallSpacing
-                            Layout.rightMargin: Kirigami.Units.smallSpacing
-                            highlighted: win.session.substanceId === modelData.id
-                            onClicked: win.session.selectSubstance(modelData.id)
-                            contentItem: RowLayout {
-                                spacing: Kirigami.Units.smallSpacing
-                                Rectangle {
-                                    width: 10; height: 10; radius: 5
-                                    color: modelData.color
-                                    border.color: Qt.rgba(1, 1, 1, 0.35)
-                                }
-                                ColumnLayout {
-                                    spacing: 0
-                                    Layout.fillWidth: true
-                                    QQC2.Label { text: modelData.name; font.bold: true }
-                                    QQC2.Label {
-                                        text: modelData["class"]
-                                        opacity: 0.55
-                                        elide: Text.ElideRight
-                                        Layout.fillWidth: true
-                                        font.pointSize: Kirigami.Theme.smallFont.pointSize
-                                    }
-                                }
-                            }
-                        }
+                    SubstancePanel {
+                        session: win.session
+                        Layout.fillWidth: true
                     }
 
-                    Kirigami.Separator { Layout.fillWidth: true; Layout.margins: Kirigami.Units.smallSpacing }
+                    Kirigami.Separator {
+                        Layout.fillWidth: true
+                        Layout.margins: Kirigami.Units.smallSpacing
+                    }
 
                     DosePanel {
                         session: win.session
@@ -119,25 +104,83 @@ Kirigami.ApplicationWindow {
 
             Kirigami.Separator { Layout.fillHeight: true }
 
-            // ---------------- centre: the curve + the body ----------------
+            // ---------------- centre ----------------
             ColumnLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.minimumWidth: Kirigami.Units.gridUnit * 22
+                Layout.minimumWidth: Kirigami.Units.gridUnit * 24
                 Layout.margins: Kirigami.Units.largeSpacing
-                spacing: Kirigami.Units.largeSpacing
+                spacing: Kirigami.Units.smallSpacing
+
+                // track chips
+                Flow {
+                    Layout.fillWidth: true
+                    spacing: 5
+
+                    Repeater {
+                        model: win.session.tracks
+                        delegate: Rectangle {
+                            id: chip
+                            required property var modelData
+                            height: 26
+                            width: chipRow.width + 16
+                            radius: 13
+                            color: modelData.active
+                                   ? Qt.rgba(Qt.color(modelData.color).r, Qt.color(modelData.color).g,
+                                             Qt.color(modelData.color).b, 0.26)
+                                   : Qt.rgba(1, 1, 1, 0.05)
+                            border.color: modelData.active ? modelData.color : Qt.rgba(1, 1, 1, 0.15)
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: win.session.selectTrack(chip.modelData.index)
+                            }
+                            RowLayout {
+                                id: chipRow
+                                anchors.centerIn: parent
+                                spacing: 5
+                                Rectangle {
+                                    width: 8; height: 8; radius: 4
+                                    color: chip.modelData.color
+                                }
+                                QQC2.Label {
+                                    text: chip.modelData.name
+                                    font.pointSize: Kirigami.Theme.smallFont.pointSize
+                                    font.bold: chip.modelData.active
+                                }
+                                QQC2.Label {
+                                    text: chip.modelData.route.replace(/_/g, " ")
+                                    opacity: 0.5
+                                    font.pointSize: Kirigami.Theme.smallFont.pointSize - 1
+                                }
+                                QQC2.ToolButton {
+                                    icon.name: "window-close"
+                                    implicitWidth: 18; implicitHeight: 18
+                                    visible: win.session.tracks.length > 1
+                                    onClicked: win.session.removeTrack(chip.modelData.index)
+                                }
+                            }
+                        }
+                    }
+                    QQC2.Label {
+                        visible: !win.session.mixed
+                        height: 26
+                        verticalAlignment: Text.AlignVCenter
+                        text: "   hover a substance on the left and press + to see a combination"
+                        opacity: 0.4
+                        font.pointSize: Kirigami.Theme.smallFont.pointSize
+                    }
+                }
 
                 CurveView {
-                    id: curve
                     session: win.session
                     accent: win.accent
                     compare: win.compareData
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    Layout.minimumHeight: 240
+                    Layout.minimumHeight: 220
                 }
 
-                // window + cursor controls
                 RowLayout {
                     Layout.fillWidth: true
                     QQC2.Label {
@@ -146,7 +189,7 @@ Kirigami.ApplicationWindow {
                         font.pointSize: Kirigami.Theme.smallFont.pointSize
                     }
                     Repeater {
-                        model: [["6 h", 6], ["12 h", 12], ["24 h", 24], ["48 h", 48], ["1 wk", 168]]
+                        model: [["6h", 6], ["12h", 12], ["24h", 24], ["3d", 72], ["1wk", 168], ["1mo", 720]]
                         QQC2.Button {
                             required property var modelData
                             text: modelData[0]
@@ -166,23 +209,123 @@ Kirigami.ApplicationWindow {
                     }
                     QQC2.Slider {
                         Layout.fillWidth: true
-                        Layout.minimumWidth: 120
-                        Layout.maximumWidth: 260
+                        Layout.minimumWidth: 110
+                        Layout.maximumWidth: 240
                         from: 0; to: win.session.hours
                         value: win.session.cursor
                         onMoved: win.session.setCursor(value)
                     }
                 }
 
-                BodyView {
-                    session: win.session
-                    accent: win.accent
-                    visible: !win.compareMode
+                RowLayout {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 248
+                    Layout.fillHeight: true
+                    Layout.minimumHeight: 250
+                    visible: !win.compareMode
+                    spacing: Kirigami.Units.largeSpacing
+
+                    BodyView {
+                        session: win.session
+                        accent: win.accent
+                        Layout.fillHeight: true
+                        // preferredWidth must not reference parent.width: the parent is
+                        // a RowLayout whose width depends on its children, so that is a
+                        // loop and it settles too wide, pushing the risk column off-screen.
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 1
+                    }
+
+                    QQC2.ScrollView {
+                        id: riskScroll
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 1
+                        Layout.fillHeight: true
+                        contentWidth: width - 18
+                        QQC2.ScrollBar.horizontal.policy: QQC2.ScrollBar.AlwaysOff
+
+                        ColumnLayout {
+                            width: riskScroll.width - 18
+                            spacing: Kirigami.Units.smallSpacing
+
+                            Repeater {
+                                model: win.session.interactions
+                                delegate: Rectangle {
+                                    id: ixBox
+                                    required property var modelData
+                                    readonly property color sev: win.severityColor(modelData.severity)
+                                    Layout.fillWidth: true
+                                    radius: 5
+                                    implicitHeight: ixCol.implicitHeight + 16
+                                    color: Qt.rgba(sev.r, sev.g, sev.b,
+                                                   modelData.severity === "danger" ? 0.14 : 0.08)
+                                    border.color: Qt.rgba(sev.r, sev.g, sev.b, 0.55)
+
+                                    ColumnLayout {
+                                        id: ixCol
+                                        anchors { fill: parent; margins: 8 }
+                                        spacing: 3
+                                        RowLayout {
+                                            Layout.fillWidth: true
+                                            spacing: 5
+                                            Kirigami.Icon {
+                                                source: ixBox.modelData.severity === "danger"
+                                                        ? "data-error" : ixBox.modelData.severity === "caution"
+                                                        ? "data-warning" : "documentinfo"
+                                                implicitWidth: 16; implicitHeight: 16
+                                                Layout.alignment: Qt.AlignTop
+                                            }
+                                            QQC2.Label {
+                                                Layout.fillWidth: true
+                                                text: ixBox.modelData.title
+                                                font.bold: true
+                                                wrapMode: Text.Wrap
+                                                color: ixBox.sev
+                                                font.pointSize: Kirigami.Theme.smallFont.pointSize
+                                            }
+                                        }
+                                        QQC2.Label {
+                                            Layout.fillWidth: true
+                                            text: ixBox.modelData.text
+                                            wrapMode: Text.Wrap
+                                            opacity: 0.85
+                                            font.pointSize: Kirigami.Theme.smallFont.pointSize
+                                        }
+                                        QQC2.Label {
+                                            Layout.fillWidth: true
+                                            visible: ixBox.modelData.action !== ""
+                                            text: "→ " + ixBox.modelData.action
+                                            wrapMode: Text.Wrap
+                                            opacity: 0.7
+                                            font.italic: true
+                                            font.pointSize: Kirigami.Theme.smallFont.pointSize
+                                        }
+                                    }
+                                }
+                            }
+
+                            Card {
+                                Layout.fillWidth: true
+                                visible: win.session.info.risk.length > 0
+                                title: "What actually goes wrong"
+                                subtitle: win.session.info.name
+                                accent: "#d9a441"
+                                Repeater {
+                                    model: win.session.info.risk
+                                    QQC2.Label {
+                                        required property var modelData
+                                        Layout.fillWidth: true
+                                        Layout.bottomMargin: 3
+                                        text: "• " + modelData
+                                        wrapMode: Text.Wrap
+                                        opacity: 0.8
+                                        font.pointSize: Kirigami.Theme.smallFont.pointSize
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
-                // route comparison table
                 Card {
                     visible: win.compareMode
                     title: "Same dose, different route"
@@ -233,23 +376,22 @@ Kirigami.ApplicationWindow {
 
             Kirigami.Separator { Layout.fillHeight: true }
 
-            // ---------------- right: readings + explanation ----------------
+            // ---------------- right: readings ----------------
             QQC2.ScrollView {
                 id: rightScroll
                 Layout.preferredWidth: Kirigami.Units.gridUnit * 22
                 Layout.minimumWidth: Kirigami.Units.gridUnit * 22
                 Layout.maximumWidth: Kirigami.Units.gridUnit * 22
                 Layout.fillHeight: true
-                contentWidth: availableWidth
+                contentWidth: width - 18
                 QQC2.ScrollBar.horizontal.policy: QQC2.ScrollBar.AlwaysOff
 
                 ColumnLayout {
-                    width: rightScroll.availableWidth
+                    width: rightScroll.width - 18
                     spacing: Kirigami.Units.largeSpacing
 
                     Item { implicitHeight: 1 }
 
-                    // at the cursor
                     Card {
                         Layout.leftMargin: Kirigami.Units.largeSpacing
                         Layout.rightMargin: Kirigami.Units.largeSpacing
@@ -291,13 +433,20 @@ Kirigami.ApplicationWindow {
                             opacity: 0.8
                             font.pointSize: Kirigami.Theme.smallFont.pointSize
                         }
+                        QQC2.Label {
+                            Layout.fillWidth: true
+                            visible: win.session.cursorInfo.lagNote !== ""
+                            text: win.session.cursorInfo.lagNote
+                            wrapMode: Text.Wrap
+                            color: "#9fd8de"
+                            font.pointSize: Kirigami.Theme.smallFont.pointSize
+                        }
                         KV {
                             key: "Absorbed"
                             value: win.session.cursorInfo.absorbedPct.toFixed(0) + "% of the dose"
                         }
                     }
 
-                    // the numbers
                     Card {
                         Layout.leftMargin: Kirigami.Units.largeSpacing
                         Layout.rightMargin: Kirigami.Units.largeSpacing
@@ -305,17 +454,27 @@ Kirigami.ApplicationWindow {
                         accent: win.accent
                         KV { key: "Peak"; value: win.session.stats.cmax }
                         KV { key: "Time to peak"; value: "+" + win.session.stats.tmax }
+                        KV {
+                            key: "Effect peaks"
+                            value: "+" + (win.session.stats.effectPeak || "")
+                            visible: !!win.session.stats.effectPeak
+                        }
+                        KV {
+                            key: "Brain lag"
+                            value: win.session.stats.effectLag || ""
+                            visible: !!win.session.stats.effectLag
+                        }
                         KV { key: "Reaches blood"; value: win.session.stats.absorbedMg }
                         KV { key: "Half-life"; value: win.session.stats.halfLife }
+                        KV {
+                            key: "Distribution"
+                            value: win.session.stats.distHalfLife || ""
+                            visible: !!win.session.stats.distHalfLife
+                        }
                         KV { key: "Rate"; value: win.session.stats.clearRate }
                         KV {
                             key: "Down to half"
                             value: "+" + (win.session.stats.halfGone || "—")
-                            visible: !win.session.stats.saturable
-                        }
-                        KV {
-                            key: "Down to a quarter"
-                            value: "+" + (win.session.stats.quarterLeft || "—")
                             visible: !win.session.stats.saturable
                         }
                         KV {
@@ -329,35 +488,33 @@ Kirigami.ApplicationWindow {
                             value: "+" + (win.session.stats.backToZero || "—")
                             visible: !!win.session.stats.saturable
                         }
-                        KV { key: "Distribution"; value: win.session.stats.vd }
+                        KV { key: "Distribution vol"; value: win.session.stats.vd }
                         KV { key: "Total exposure"; value: win.session.stats.auc }
 
-                        QQC2.Label {
-                            Layout.fillWidth: true
-                            Layout.topMargin: 4
-                            visible: !!win.session.stats.flipFlop
-                            text: win.session.stats.flipFlop || ""
-                            wrapMode: Text.Wrap
-                            color: "#e8c35a"
-                            font.pointSize: Kirigami.Theme.smallFont.pointSize
-                        }
-                        QQC2.Label {
-                            Layout.fillWidth: true
-                            Layout.topMargin: 4
-                            visible: !!win.session.stats.saturable
-                            text: win.session.info.eliminationNote
-                            wrapMode: Text.Wrap
-                            opacity: 0.7
-                            font.pointSize: Kirigami.Theme.smallFont.pointSize
+                        Repeater {
+                            model: [win.session.stats.flipFlop || "",
+                                    win.session.info.nonlinear,
+                                    win.session.stats.saturable ? win.session.info.eliminationNote : "",
+                                    win.session.stats.twoCompartment ? win.session.info.twoCompartmentNote : "",
+                                    win.session.info.modelNote,
+                                    win.session.info.uncertainty]
+                            QQC2.Label {
+                                required property var modelData
+                                Layout.fillWidth: true
+                                Layout.topMargin: 4
+                                visible: modelData !== ""
+                                text: modelData
+                                wrapMode: Text.Wrap
+                                opacity: 0.72
+                                font.pointSize: Kirigami.Theme.smallFont.pointSize
+                            }
                         }
                     }
 
-                    // personal factors in play
                     Card {
                         Layout.leftMargin: Kirigami.Units.largeSpacing
                         Layout.rightMargin: Kirigami.Units.largeSpacing
                         title: "Your factors"
-                        subtitle: win.session.activeFactors.length === 0 ? "none set" : ""
                         accent: "#d9a441"
                         visible: win.session.activeFactors.length > 0
                         Repeater {
@@ -383,7 +540,6 @@ Kirigami.ApplicationWindow {
                         }
                     }
 
-                    // what it does and where it goes
                     Card {
                         Layout.leftMargin: Kirigami.Units.largeSpacing
                         Layout.rightMargin: Kirigami.Units.largeSpacing
@@ -412,7 +568,6 @@ Kirigami.ApplicationWindow {
                         }
                     }
 
-                    // metabolic pathways
                     Card {
                         Layout.leftMargin: Kirigami.Units.largeSpacing
                         Layout.rightMargin: Kirigami.Units.largeSpacing
@@ -476,14 +631,14 @@ Kirigami.ApplicationWindow {
 
             QQC2.Label {
                 Layout.fillWidth: true
-                Layout.maximumWidth: 460
+                Layout.maximumWidth: 480
                 text: "The same dose behaves differently in different people. These are the factors with well-documented effects on the substances here."
                 wrapMode: Text.Wrap
                 opacity: 0.7
             }
 
             RowLayout {
-                QQC2.Label { text: "Body weight"; Layout.minimumWidth: 140 }
+                QQC2.Label { text: "Body weight"; Layout.minimumWidth: 150 }
                 QQC2.SpinBox {
                     from: 30; to: 200
                     value: win.session.person.weight
@@ -491,21 +646,19 @@ Kirigami.ApplicationWindow {
                 }
                 QQC2.Label { text: "kg"; opacity: 0.6 }
             }
-
             RowLayout {
-                QQC2.Label { text: "Body-water fraction"; Layout.minimumWidth: 140 }
+                QQC2.Label { text: "Body-water fraction"; Layout.minimumWidth: 150 }
                 QQC2.ComboBox {
                     model: ["male", "female"]
                     currentIndex: win.session.person.sex === "female" ? 1 : 0
                     onActivated: win.session.setPersonField("sex", currentIndex === 1 ? "female" : "male")
                 }
                 QQC2.Label {
-                    text: "affects alcohol only"
+                    text: "affects alcohol"
                     opacity: 0.5
                     font.pointSize: Kirigami.Theme.smallFont.pointSize
                 }
             }
-
             QQC2.CheckBox {
                 text: "Smoker — induces CYP1A2, clears caffeine about twice as fast"
                 checked: win.session.person.smoker
@@ -517,23 +670,39 @@ Kirigami.ApplicationWindow {
                 onToggled: win.session.setPersonField("chronicAlcohol", checked)
             }
             QQC2.CheckBox {
-                text: "Oral contraceptives — inhibits CYP1A2, roughly doubles caffeine half-life"
+                text: "Oral contraceptives — inhibits CYP1A2, doubles caffeine half-life"
                 checked: win.session.person.oralContraceptives
                 onToggled: win.session.setPersonField("oralContraceptives", checked)
             }
             RowLayout {
-                QQC2.Label { text: "CYP2A6 (nicotine)"; Layout.minimumWidth: 140 }
+                QQC2.Label { text: "CYP2A6 (nicotine)"; Layout.minimumWidth: 150 }
                 QQC2.ComboBox {
                     model: ["slow", "normal", "fast"]
                     currentIndex: ["slow", "normal", "fast"].indexOf(win.session.person.cyp2a6)
                     onActivated: win.session.setPersonField("cyp2a6", model[currentIndex])
                 }
             }
+            RowLayout {
+                QQC2.Label { text: "CYP2D6 (codeine)"; Layout.minimumWidth: 150 }
+                QQC2.ComboBox {
+                    model: ["poor", "normal", "ultrarapid"]
+                    currentIndex: ["poor", "normal", "ultrarapid"].indexOf(win.session.person.cyp2d6)
+                    onActivated: win.session.setPersonField("cyp2d6", model[currentIndex])
+                }
+            }
+            RowLayout {
+                QQC2.Label { text: "Urine pH (amphetamine)"; Layout.minimumWidth: 150 }
+                QQC2.ComboBox {
+                    model: ["acidic", "normal", "alkaline"]
+                    currentIndex: ["acidic", "normal", "alkaline"].indexOf(win.session.person.urinePh)
+                    onActivated: win.session.setPersonField("urinePh", model[currentIndex])
+                }
+            }
 
             QQC2.Label {
                 Layout.fillWidth: true
-                Layout.maximumWidth: 460
-                text: "Saved to ~/.config/kinetics/person.json. These shift the curve by the multipliers reported in the cited literature; they are population averages, and real variation between individuals is wider than any of them."
+                Layout.maximumWidth: 480
+                text: "Saved to ~/.config/kinetics/person.json. These shift the curve by multipliers reported in the cited literature; they are population averages, and real variation between individuals is wider than any of them."
                 wrapMode: Text.Wrap
                 opacity: 0.55
                 font.pointSize: Kirigami.Theme.smallFont.pointSize
@@ -551,8 +720,8 @@ Kirigami.ApplicationWindow {
 
             QQC2.Label {
                 Layout.fillWidth: true
-                Layout.maximumWidth: 560
-                text: "Every parameter for " + win.session.info.name + " is taken from the following. Values are population means; the published ranges are wider."
+                Layout.maximumWidth: 580
+                text: "Every parameter for " + win.session.info.name + " is taken from the following. Values are population means; published ranges are wider."
                 wrapMode: Text.Wrap
                 opacity: 0.7
             }
@@ -561,7 +730,7 @@ Kirigami.ApplicationWindow {
                 delegate: ColumnLayout {
                     required property var modelData
                     Layout.fillWidth: true
-                    Layout.maximumWidth: 560
+                    Layout.maximumWidth: 580
                     spacing: 1
                     QQC2.Label {
                         Layout.fillWidth: true
@@ -580,8 +749,8 @@ Kirigami.ApplicationWindow {
             Kirigami.Separator { Layout.fillWidth: true }
             QQC2.Label {
                 Layout.fillWidth: true
-                Layout.maximumWidth: 560
-                text: "This is a teaching model, not a clinical tool. It uses one- or two-compartment kinetics with population-average parameters, so it shows the shape of what happens — not what will happen to any particular person."
+                Layout.maximumWidth: 580
+                text: "This is a teaching model, not a clinical or dosing tool. It uses one- or two-compartment kinetics with population-average parameters, so it shows the shape of what happens — not what will happen to any particular person. Tolerance, which changes real risk more than any number here, is not modelled at all."
                 wrapMode: Text.Wrap
                 opacity: 0.6
                 font.pointSize: Kirigami.Theme.smallFont.pointSize

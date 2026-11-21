@@ -1,0 +1,62 @@
+{
+  "id": "diazepam",
+  "name": "Diazepam",
+  "formula": "C16H13ClN2O",
+  "class": "GABA-A positive allosteric modulator",
+  "category": "Depressants",
+  "color": "#6f9fd9",
+  "summary": "A drug that outlives itself. Diazepam's own half-life is about two days, which is long enough — but it is broken down into nordazepam, which is also active and has a half-life of up to four days. Take it daily and you are not taking one drug; you are slowly filling up with a second one that takes weeks to leave.",
+  "mechanism": "Binds a site on the GABA-A receptor distinct from GABA itself and increases the frequency with which the chloride channel opens in response to GABA. It does not open the channel on its own, which is why benzodiazepines alone have a relatively high ceiling for respiratory depression — and why that safety disappears entirely when combined with something that does open it directly, like alcohol or an opioid.",
+  "two_compartment": {"central_fraction": 0.25,
+                      "note": "Diazepam is very fat-soluble and distributes widely, giving a fast early fall that is redistribution rather than elimination."},
+  "vd_per_kg": 1.1,
+  "vd_range": [0.8, 2.0],
+  "cl_per_kg": 0.025,
+  "half_life": 43.0,
+  "half_life_range": [20.0, 100.0],
+  "ke0_half_life": 0.25,
+  "routes": {
+    "oral": {"f": 0.94, "tmax": 1.0, "tlag": 0.2,
+             "note": "Almost completely absorbed and unusually fast for a tablet, which is part of why diazepam feels more abrupt than its long half-life would suggest."},
+    "rectal": {"f": 0.9, "tmax": 0.3, "tlag": 0.05, "note": "Used for seizures; very rapid."},
+    "iv": {"f": 1.0, "tmax": 0.03, "tlag": 0.0, "note": "Emergency use; effect within a minute."}
+  },
+  "default_route": "oral",
+  "metabolism": {
+    "primary_enzyme": "CYP2C19 and CYP3A4",
+    "enzyme_share": 0.95,
+    "pathways": [
+      {"name": "Nordazepam", "fraction": 0.6, "active": true,
+       "note": "Active, roughly as potent as diazepam, and with a half-life of 40-100 hours — longer than the parent. This is why diazepam accumulates for weeks on daily dosing and why stopping abruptly produces a withdrawal that is delayed by days."},
+      {"name": "Temazepam", "fraction": 0.2, "active": true, "note": "Active; half-life 8-20 hours. A sedative in its own right."},
+      {"name": "Oxazepam", "fraction": 0.15, "active": true,
+       "note": "Active, the final active metabolite, then glucuronidated and excreted. Oxazepam's own route does not need CYP, which is why it is preferred in liver disease and the elderly."},
+      {"name": "Glucuronides", "fraction": 0.05, "active": false, "note": "Inactive; renally excreted."}
+    ]
+  },
+  "presets": [
+    {"label": "Tablet, 2 mg", "mg": 2},
+    {"label": "Tablet, 5 mg", "mg": 5},
+    {"label": "Tablet, 10 mg", "mg": 10}
+  ],
+  "default_dose": 5,
+  "display_unit": "µg/L",
+  "display_scale": 1000.0,
+  "effect_levels": [
+    {"conc": 0.1, "label": "100 µg/L — anxiolytic range"},
+    {"conc": 0.4, "label": "400 µg/L — marked sedation"},
+    {"conc": 1.5, "label": "1500 µg/L — heavy sedation; dangerous with any other depressant"}
+  ],
+  "risk": [
+    "Set the window to a week, add one dose a day, and watch the trough climb. That accumulation is the reason people feel steadily more sedated on an unchanged dose, and why the elderly fall.",
+    "Benzodiazepines are relatively forgiving alone and extremely dangerous combined. Alcohol and opioids both deepen respiratory depression far beyond what either produces separately — the great majority of benzodiazepine-involved deaths are combinations. See interactions.",
+    "Dependence develops within weeks of regular use, and withdrawal from a long-acting benzodiazepine is delayed — symptoms can begin days after stopping, which makes the link easy to miss. Abrupt withdrawal can cause seizures and can be fatal; it needs a taper, not willpower.",
+    "Street 'benzodiazepine' tablets are frequently not what they claim, and often contain novel benzodiazepines with far longer or stronger action than diazepam."
+  ],
+  "sources": [
+    {"text": "Greenblatt DJ et al. Clinical pharmacokinetics of the newer benzodiazepines. Clin Pharmacokinet. 1983;8(3):233-52.", "for": "Vd, clearance, half-life, metabolite half-lives"},
+    {"text": "Mandrioli R, Mercolini L, Raggi MA. Benzodiazepine metabolism: an analytical perspective. Curr Drug Metab. 2008;9(8):827-44.", "for": "metabolic pathways and active metabolites"},
+    {"text": "Riss J et al. Benzodiazepines in epilepsy: pharmacology and pharmacokinetics. Acta Neurol Scand. 2008;118(2):69-86.", "for": "absorption by route, two-compartment behaviour"},
+    {"text": "Jones JD, Mogali S, Comer SD. Polydrug abuse: benzodiazepines and opioids. Drug Alcohol Depend. 2012;125(1-2):8-18.", "for": "combined respiratory depression"}
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "id": "nicotine",
+  "name": "Nicotine",
+  "formula": "C10H14N2",
+  "class": "Nicotinic acetylcholine receptor agonist",
+  "color": "#6f8f3f",
+  "summary": "The clearest demonstration in everyday pharmacology that the route matters more than the dose. The same molecule is mildly pleasant from a patch and fiercely addictive from smoke, purely because of how fast it arrives.",
+  "mechanism": "Agonist at nicotinic acetylcholine receptors, especially the α4β2 subtype in the ventral tegmental area, which triggers dopamine release in the nucleus accumbens. The speed of the rise is what the reward system reads: inhaled nicotine reaches the brain in about 10-20 seconds, faster than an intravenous injection, because it travels the short path from lung to left heart to brain.",
+  "vd_per_kg": 2.6,
+  "vd_range": [
+    1.8,
+    3.4
+  ],
+  "half_life": 2.0,
+  "half_life_range": [
+    1.0,
+    4.0
+  ],
+  "routes": {
+    "smoked": {
+      "f": 0.8,
+      "tmax": 0.12,
+      "tlag": 0.0,
+      "note": "Absorbed across the huge surface of the lung and in the arterial blood within seconds. A cigarette delivers roughly 1 to 1.5 mg systemically, far less than the 10-15 mg in the tobacco itself."
+    },
+    "gum": {
+      "f": 0.55,
+      "tmax": 0.5,
+      "tlag": 0.1,
+      "note": "Buccal absorption, but only if chewed slowly and parked against the cheek. Chewers typically extract 50-75% of the gum's nicotine, and whatever is swallowed is largely destroyed by first-pass metabolism."
+    },
+    "patch": {
+      "f": 0.85,
+      "tmax": 7.0,
+      "tlag": 1.0,
+      "note": "Transdermal, deliberately slow. It holds a flat level for 16-24 hours and produces almost no spike, which is exactly why it treats dependence without feeding it."
+    },
+    "vaped": {
+      "f": 0.65,
+      "tmax": 0.15,
+      "tlag": 0.0,
+      "note": "Pulmonary like smoking, though delivery varies enormously with device power, nicotine salt versus freebase, and puff pattern."
+    },
+    "oral_pouch": {
+      "f": 0.6,
+      "tmax": 0.6,
+      "tlag": 0.15,
+      "note": "Buccal, similar to gum but steadier since nothing depends on chewing technique."
+    }
+  },
+  "default_route": "smoked",
+  "metabolism": {
+    "primary_enzyme": "CYP2A6",
+    "enzyme_share": 0.8,
+    "pathways": [
+      {
+        "name": "Cotinine",
+        "fraction": 0.8,
+        "active": false,
+        "note": "Inactive, but with a 16-hour half-life, which is why it is the standard biomarker for tobacco use and shows up in tests days later."
+      },
+      {
+        "name": "Nicotine N'-oxide",
+        "fraction": 0.05,
+        "active": false,
+        "note": "Minor pathway."
+      },
+      {
+        "name": "Other / renal",
+        "fraction": 0.15,
+        "active": false,
+        "note": "Glucuronidation and unchanged renal excretion; the renal share rises when urine is acidic."
+      }
+    ]
+  },
+  "presets": [
+    {
+      "label": "One cigarette",
+      "mg": 1.2,
+      "route": "smoked"
+    },
+    {
+      "label": "Vape session (~10 puffs)",
+      "mg": 1.5,
+      "route": "vaped"
+    },
+    {
+      "label": "Gum, 2 mg",
+      "mg": 2,
+      "route": "gum"
+    },
+    {
+      "label": "Gum, 4 mg",
+      "mg": 4,
+      "route": "gum"
+    },
+    {
+      "label": "Patch, 21 mg/24 h",
+      "mg": 21,
+      "route": "patch"
+    },
+    {
+      "label": "Pouch, 6 mg",
+      "mg": 6,
+      "route": "oral_pouch"
+    }
+  ],
+  "default_dose": 1.2,
+  "effect_levels": [
+    {
+      "conc": 0.005,
+      "label": "Threshold of subjective effect"
+    },
+    {
+      "conc": 0.015,
+      "label": "Typical level between cigarettes in a regular smoker"
+    },
+    {
+      "conc": 0.04,
+      "label": "Arterial peak during a cigarette"
+    },
+    {
+      "conc": 0.2,
+      "label": "Acute toxicity reported in non-tolerant adults"
+    }
+  ],
+  "factors": {
+    "cyp2a6_slow": {
+      "cl_multiplier": 0.4,
+      "note": "Slow CYP2A6 metabolizers, common in East Asian populations, keep nicotine around longer, smoke fewer cigarettes and find it markedly easier to quit."
+    },
+    "cyp2a6_fast": {
+      "cl_multiplier": 1.6,
+      "note": "Fast metabolizers clear it quickly, feel withdrawal sooner, and smoke more often."
+    },
+    "pregnancy": {
+      "cl_multiplier": 1.6,
+      "note": "Clearance rises about 60% in pregnancy, so the same habit produces lower levels."
+    },
+    "menthol": {
+      "cl_multiplier": 0.9,
+      "note": "Menthol mildly inhibits CYP2A6 and slows nicotine clearance."
+    }
+  },
+  "sources": [
+    {
+      "text": "Benowitz NL, Hukkanen J, Jacob P. Nicotine chemistry, metabolism, kinetics and biomarkers. Handb Exp Pharmacol. 2009;192:29-60.",
+      "for": "Vd, half-life, metabolite shares, route bioavailability"
+    },
+    {
+      "text": "Hukkanen J, Jacob P, Benowitz NL. Metabolism and disposition kinetics of nicotine. Pharmacol Rev. 2005;57(1):79-115.",
+      "for": "CYP2A6 share, clearance factors"
+    },
+    {
+      "text": "Benowitz NL et al. Determinants of nicotine intake while chewing nicotine polacrilex gum. Clin Pharmacol Ther. 1987;41(4):467-73. PMID 3829583.",
+      "for": "gum extraction 53% (2 mg) to 72% (4 mg), swallowed fraction lost to first pass"
+    },
+    {
+      "text": "Benowitz NL. Nicotine addiction. N Engl J Med. 2010;362(24):2295-303.",
+      "for": "speed of arterial delivery and its role in dependence"
+    }
+  ],
+  "display_unit": "µg/L",
+  "display_scale": 1000.0,
+  "uncertainty": "Published venous peaks after one cigarette are around 15-30 µg/L, higher than this one-compartment model gives. The gap is mostly real physiology rather than a bad parameter: nicotine is sampled arterially within seconds of a puff at concentrations several times the venous value, and a single well-mixed compartment cannot represent that spike at all. Since the arterial spike is precisely what drives dependence, treat the shape and the comparison between routes as the useful part here, not the absolute number."
+}

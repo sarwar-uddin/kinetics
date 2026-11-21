@@ -1,0 +1,94 @@
+{
+  "id": "fluoxetine",
+  "name": "Fluoxetine",
+  "formula": "C17H18F3NO",
+  "class": "SSRI",
+  "category": "Psychiatric",
+  "color": "#6fd9c4",
+  "summary": "The slowest drug in this library by a wide margin. Fluoxetine's own half-life is a couple of days; its active metabolite norfluoxetine takes one to two weeks. Steady state arrives a month after starting, and a month after stopping there is still a meaningful amount present. Nothing about this drug happens on the timescale people expect of a tablet.",
+  "mechanism": "Blocks the serotonin transporter, raising synaptic serotonin within hours — yet the clinical effect takes weeks, which is the central puzzle of antidepressant pharmacology. The delay is not kinetic: receptor levels are saturated long before mood changes, so the therapeutic effect must come from slower downstream adaptation.",
+  "vd_per_kg": 25.0,
+  "vd_range": [
+    20.0,
+    42.0
+  ],
+  "half_life": 96.0,
+  "half_life_range": [
+    48.0,
+    144.0
+  ],
+  "routes": {
+    "oral": {
+      "f": 0.9,
+      "tmax": 7.0,
+      "tlag": 0.5,
+      "note": "Well absorbed, with a peak 6-8 hours later. Food has no meaningful effect, and the enormous volume of distribution means the body acts as a reservoir that smooths everything out."
+    }
+  },
+  "default_route": "oral",
+  "metabolism": {
+    "primary_enzyme": "CYP2D6 (which it also inhibits)",
+    "enzyme_share": 0.85,
+    "pathways": [
+      {
+        "name": "Norfluoxetine",
+        "fraction": 0.7,
+        "active": true,
+        "note": "Fully active as an SSRI, with a half-life of 7-15 days — several times longer than the parent. It is the reason fluoxetine can be stopped abruptly without the discontinuation syndrome that other SSRIs cause: the drug tapers itself over weeks. It is also why a washout of five weeks is required before starting an MAOI."
+      },
+      {
+        "name": "Glucuronides / other",
+        "fraction": 0.3,
+        "active": false,
+        "note": "Inactive, renally excreted."
+      }
+    ]
+  },
+  "presets": [
+    {
+      "label": "Capsule, 20 mg",
+      "mg": 20
+    },
+    {
+      "label": "Capsule, 40 mg",
+      "mg": 40
+    },
+    {
+      "label": "Capsule, 60 mg",
+      "mg": 60
+    }
+  ],
+  "default_dose": 20,
+  "effect_levels": [
+    {
+      "conc": 0.05,
+      "label": "Lower end of the usual therapeutic range"
+    },
+    {
+      "conc": 0.5,
+      "label": "Upper therapeutic range (parent plus metabolite)"
+    }
+  ],
+  "risk": [
+    "Set the window to a week and add a daily dose: the curve is still climbing at day seven. Judging whether it 'works' after a few days is judging a level that has not arrived yet.",
+    "Fluoxetine is a potent CYP2D6 inhibitor, and it keeps inhibiting for weeks after the last dose. It makes codeine and tramadol stop working, and it raises levels of many other drugs cleared by that enzyme. See interactions.",
+    "Combining serotonergic drugs — MDMA, tramadol, other SSRIs, MAOIs, triptans, St John's wort — risks serotonin syndrome, and fluoxetine's long tail means the risk persists for weeks after stopping.",
+    "SSRIs blunt the effects of MDMA and the classical psychedelics, which is a pharmacological interaction rather than a safety one, though it reliably leads to redosing."
+  ],
+  "sources": [
+    {
+      "text": "Hiemke C, Härtter S. Pharmacokinetics of selective serotonin reuptake inhibitors. Pharmacol Ther. 2000;85(1):11-28.",
+      "for": "half-life, Vd, bioavailability, norfluoxetine"
+    },
+    {
+      "text": "Altamura AC et al. Clinical pharmacokinetics of fluoxetine. Clin Pharmacokinet. 1994;26(3):201-14.",
+      "for": "steady state, accumulation, Tmax"
+    },
+    {
+      "text": "Spina E, Santoro V, D'Arrigo C. Clinically relevant pharmacokinetic drug interactions with second-generation antidepressants. Clin Ther. 2008;30(7):1206-27.",
+      "for": "CYP2D6 inhibition"
+    }
+  ],
+  "display_unit": "µg/L",
+  "display_scale": 1000.0
+}

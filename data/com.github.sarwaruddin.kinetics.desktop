@@ -2,10 +2,11 @@
 Type=Application
 Name=Kinetics
 GenericName=Pharmacokinetics Explorer
-Comment=How substances are absorbed, distributed, metabolised and eliminated
+Comment=See what a substance does inside the body, over time
 Exec=kinetics
-Icon=applications-science
+Icon=com.github.sarwaruddin.kinetics
 Terminal=false
 Categories=Education;
-Keywords=pharmacokinetics;halflife;metabolism;caffeine;absorption;
+Keywords=pharmacokinetics;pharmacology;half-life;metabolism;absorption;harm reduction;
+StartupNotify=true
 StartupWMClass=kinetics

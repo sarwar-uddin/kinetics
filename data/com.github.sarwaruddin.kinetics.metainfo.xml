@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.github.sarwaruddin.kinetics</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+
+  <name>Kinetics</name>
+  <summary>See what a substance does inside the body, over time</summary>
+
+  <description>
+    <p>
+      Kinetics plots what happens to a substance after you take it: how much
+      reaches the blood, how fast, where it goes in the body, what it turns
+      into, and how long it really takes to leave. Move the cursor across the
+      curve and it explains the phase you are in.
+    </p>
+    <p>
+      It covers twenty substances — everyday ones like caffeine, alcohol and
+      paracetamol, and commonly used or misused ones including opioids,
+      stimulants, sedatives, dissociatives and psychedelics. Each was chosen to
+      demonstrate a different principle of pharmacokinetics: saturable
+      elimination, flip-flop kinetics, redistribution into tissue, prodrug
+      activation, genetic variation in metabolism, and the lag between a blood
+      level and an effect.
+    </p>
+    <p>
+      Several substances can be placed on one timeline at once, which is where
+      the real risk usually lives. When a combination is known to be dangerous
+      — an opioid with a sedative, alcohol with almost anything — the overlap
+      is drawn and the mechanism explained.
+    </p>
+    <p>
+      Every parameter comes from published literature and carries its citation.
+      This is a teaching and harm-reduction tool, not a clinical or dosing
+      calculator: it shows the shape of what happens, not what will happen to
+      any particular person.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">com.github.sarwaruddin.kinetics.desktop</launchable>
+
+  <categories>
+    <category>Education</category>
+    <category>Science</category>
+  </categories>
+
+  <keywords>
+    <keyword>pharmacokinetics</keyword>
+    <keyword>pharmacology</keyword>
+    <keyword>half-life</keyword>
+    <keyword>metabolism</keyword>
+    <keyword>harm reduction</keyword>
+  </keywords>
+
+  <url type="homepage">https://github.com/sarwar-uddin/kinetics</url>
+  <url type="bugtracker">https://github.com/sarwar-uddin/kinetics/issues</url>
+
+  <developer id="com.github.sarwaruddin">
+    <name>Sarwar Uddin</name>
+  </developer>
+
+  <content_rating type="oars-1.1">
+    <content_attribute id="drugs-alcohol">moderate</content_attribute>
+    <content_attribute id="drugs-narcotics">moderate</content_attribute>
+    <content_attribute id="drugs-tobacco">moderate</content_attribute>
+  </content_rating>
+
+  <releases>
+    <release version="0.2.0" date="2026-11-22">
+      <description>
+        <p>
+          Twenty substances across eight categories, a two-compartment and
+          effect-site model, combination timelines with interaction warnings,
+          and a body diagram showing where the substance actually is.
+        </p>
+      </description>
+    </release>
+    <release version="0.1.0" date="2026-11-22">
+      <description>
+        <p>First release: caffeine, nicotine, alcohol and paracetamol.</p>
+      </description>
+    </release>
+  </releases>
+</component>
