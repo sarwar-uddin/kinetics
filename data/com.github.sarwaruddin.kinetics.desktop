@@ -6,6 +6,6 @@ Comment=How substances are absorbed, distributed, metabolised and eliminated
 Exec=kinetics
 Icon=applications-science
 Terminal=false
-Categories=Education;Science;
+Categories=Education;
 Keywords=pharmacokinetics;halflife;metabolism;caffeine;absorption;
 StartupWMClass=kinetics
