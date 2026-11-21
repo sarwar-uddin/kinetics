@@ -39,6 +39,39 @@
 
   <launchable type="desktop-id">com.github.sarwaruddin.kinetics.desktop</launchable>
 
+  <provides>
+    <binary>kinetics</binary>
+    <id>com.github.sarwaruddin.kinetics.desktop</id>
+  </provides>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>The effect-site curve peaks after the blood level, and the figure shows where the drug is</caption>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/main/docs/screenshot.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Two substances on one timeline, with the interaction and its mechanism explained</caption>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/main/docs/combination.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Seven daily methadone doses: the trough climbs every day as the drug accumulates</caption>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/main/docs/accumulation.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Cocaine with alcohol, forming cocaethylene</caption>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/main/docs/cocaine-alcohol.png</image>
+    </screenshot>
+  </screenshots>
+
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+
+  <recommends>
+    <display_length compare="ge">1120</display_length>
+  </recommends>
+
   <categories>
     <category>Education</category>
     <category>Science</category>
