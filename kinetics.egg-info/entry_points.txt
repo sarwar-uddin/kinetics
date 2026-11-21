@@ -1,2 +1,0 @@
-[console_scripts]
-kinetics = kinetics.__main__:main
