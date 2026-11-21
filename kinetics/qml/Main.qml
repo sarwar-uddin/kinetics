@@ -702,7 +702,7 @@ Kirigami.ApplicationWindow {
             QQC2.Label {
                 Layout.fillWidth: true
                 Layout.maximumWidth: 480
-                text: "Saved to ~/.config/kinetics/person.json. These shift the curve by multipliers reported in the cited literature; they are population averages, and real variation between individuals is wider than any of them."
+                text: "Saved to your config directory (~/.config/kinetics/person.json). These shift the curve by multipliers reported in the cited literature; they are population averages, and real variation between individuals is wider than any of them."
                 wrapMode: Text.Wrap
                 opacity: 0.55
                 font.pointSize: Kirigami.Theme.smallFont.pointSize

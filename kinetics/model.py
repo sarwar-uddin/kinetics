@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -12,7 +13,11 @@ import numpy as np
 from . import pk
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
-CONFIG = Path.home() / ".config" / "kinetics" / "person.json"
+# Respect XDG_CONFIG_HOME rather than hardcoding ~/.config: inside a Flatpak
+# sandbox the real ~/.config is not visible, and the variable points at the
+# app's own per-application config directory.
+CONFIG_HOME = Path(os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config")
+CONFIG = CONFIG_HOME / "kinetics" / "person.json"
 
 # Order defines the sidebar; categories group it.
 SUBSTANCE_ORDER = [
