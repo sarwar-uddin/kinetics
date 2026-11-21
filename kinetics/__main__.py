@@ -17,8 +17,9 @@ def main() -> int:
     app = QGuiApplication(sys.argv)
     app.setApplicationName("kinetics")
     app.setApplicationDisplayName("Kinetics")
-    app.setDesktopFileName("com.github.sarwaruddin.kinetics")
-    app.setWindowIcon(QIcon.fromTheme("applications-science"))
+    app.setDesktopFileName("io.github.sarwar_uddin.Kinetics")
+    app.setWindowIcon(QIcon.fromTheme("io.github.sarwar_uddin.Kinetics",
+                                      QIcon.fromTheme("applications-science")))
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     session = Session()

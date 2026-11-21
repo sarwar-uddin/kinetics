@@ -6,7 +6,7 @@
 #
 set -euo pipefail
 REPO="$(cd "$(dirname "$0")" && pwd)"
-APP=com.github.sarwaruddin.kinetics
+APP=io.github.sarwar_uddin.Kinetics
 
 mkdir -p ~/.local/bin \
          ~/.local/share/applications \

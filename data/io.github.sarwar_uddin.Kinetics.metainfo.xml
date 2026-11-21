@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>com.github.sarwaruddin.kinetics</id>
+  <id>io.github.sarwar_uddin.Kinetics</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
 
   <name>Kinetics</name>
-  <summary>See what a substance does inside the body, over time</summary>
+  <summary>How a substance moves through you</summary>
 
   <description>
     <p>
@@ -37,29 +37,29 @@
     </p>
   </description>
 
-  <launchable type="desktop-id">com.github.sarwaruddin.kinetics.desktop</launchable>
+  <launchable type="desktop-id">io.github.sarwar_uddin.Kinetics.desktop</launchable>
 
   <provides>
     <binary>kinetics</binary>
-    <id>com.github.sarwaruddin.kinetics.desktop</id>
+    <id>io.github.sarwar_uddin.Kinetics.desktop</id>
   </provides>
 
   <screenshots>
     <screenshot type="default">
-      <caption>The effect-site curve peaks after the blood level, and the figure shows where the drug is</caption>
-      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/main/docs/screenshot.png</image>
+      <caption>The effect in the brain peaks after the blood level does</caption>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.1/docs/screenshot.png</image>
     </screenshot>
     <screenshot>
-      <caption>Two substances on one timeline, with the interaction and its mechanism explained</caption>
-      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/main/docs/combination.png</image>
+      <caption>Two substances on one timeline, with the interaction explained</caption>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.1/docs/combination.png</image>
     </screenshot>
     <screenshot>
-      <caption>Seven daily methadone doses: the trough climbs every day as the drug accumulates</caption>
-      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/main/docs/accumulation.png</image>
+      <caption>Seven daily doses, with the level climbing each day</caption>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.1/docs/accumulation.png</image>
     </screenshot>
     <screenshot>
-      <caption>Cocaine with alcohol, forming cocaethylene</caption>
-      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/main/docs/cocaine-alcohol.png</image>
+      <caption>A combination that forms a third, longer-lived drug</caption>
+      <image type="source" width="1680" height="1000">https://raw.githubusercontent.com/sarwar-uddin/kinetics/v0.2.1/docs/cocaine-alcohol.png</image>
     </screenshot>
   </screenshots>
 
@@ -88,7 +88,7 @@
   <url type="homepage">https://github.com/sarwar-uddin/kinetics</url>
   <url type="bugtracker">https://github.com/sarwar-uddin/kinetics/issues</url>
 
-  <developer id="com.github.sarwaruddin">
+  <developer id="io.github.sarwar_uddin">
     <name>Sarwar Uddin</name>
   </developer>
 

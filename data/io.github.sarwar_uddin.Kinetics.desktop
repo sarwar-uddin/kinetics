@@ -2,9 +2,9 @@
 Type=Application
 Name=Kinetics
 GenericName=Pharmacokinetics Explorer
-Comment=See what a substance does inside the body, over time
+Comment=How a substance moves through you
 Exec=kinetics
-Icon=com.github.sarwaruddin.kinetics
+Icon=io.github.sarwar_uddin.Kinetics
 Terminal=false
 Categories=Education;
 Keywords=pharmacokinetics;pharmacology;half-life;metabolism;absorption;harm reduction;
